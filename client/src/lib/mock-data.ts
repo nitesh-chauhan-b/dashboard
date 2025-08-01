@@ -43,6 +43,15 @@ const generateCampaignData = (): Campaign[] => {
     const updatedDate = new Date(createdDate);
     updatedDate.setDate(updatedDate.getDate() + Math.floor(Math.random() * 45));
     
+    // Generate start and end dates
+    const startDate = new Date(createdDate);
+    startDate.setDate(startDate.getDate() + Math.floor(Math.random() * 7)); // Start within a week of creation
+    
+    const endDate = status === 'completed' ? new Date(startDate) : null;
+    if (endDate) {
+      endDate.setMonth(endDate.getMonth() + 1 + Math.floor(Math.random() * 6)); // 1-6 months duration
+    }
+
     campaigns.push({
       id: (i + 1).toString(),
       name: `${campaignType} Campaign`,
@@ -52,6 +61,8 @@ const generateCampaignData = (): Campaign[] => {
       conversions,
       ctr,
       status,
+      startDate,
+      endDate,
       createdAt: createdDate,
       updatedAt: updatedDate,
     });

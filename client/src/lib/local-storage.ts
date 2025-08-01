@@ -56,9 +56,11 @@ export function saveCampaigns(campaigns: Campaign[]): void {
 
 export function loadCampaigns(): Campaign[] {
   const campaigns = loadFromStorage<Campaign>(STORAGE_KEYS.CAMPAIGNS);
-  // Convert date strings back to Date objects
+  // Convert date strings back to Date objects and handle all date fields
   return campaigns.map(campaign => ({
     ...campaign,
+    startDate: campaign.startDate ? new Date(campaign.startDate) : new Date(),
+    endDate: campaign.endDate ? new Date(campaign.endDate) : null,
     createdAt: campaign.createdAt ? new Date(campaign.createdAt) : new Date(),
     updatedAt: campaign.updatedAt ? new Date(campaign.updatedAt) : new Date()
   }));
