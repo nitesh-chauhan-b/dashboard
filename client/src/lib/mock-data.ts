@@ -12,24 +12,36 @@ export const mockMetrics: Metrics = {
 // Generate dynamic campaign data based on current time
 const generateCampaignData = (): Campaign[] => {
   const campaigns = [];
-  const platforms = ["Facebook", "Google Ads", "Instagram", "LinkedIn", "TikTok"];
+  const platforms = ["Facebook", "Google Ads", "Instagram", "LinkedIn", "TikTok", "Twitter", "YouTube", "Snapchat"];
   const statuses = ["active", "paused", "completed"] as const;
-  const campaignTypes = ["Holiday Sale", "Spring Launch", "Summer Promo", "Black Friday", "New Product", "Brand Awareness", "Lead Generation", "Retargeting", "Flash Sale", "Valentine's Day"];
+  const campaignTypes = [
+    "Holiday Sale", "Spring Launch", "Summer Promo", "Black Friday", "New Product", 
+    "Brand Awareness", "Lead Generation", "Retargeting", "Flash Sale", "Valentine's Day",
+    "Back to School", "Cyber Monday", "Christmas Special", "New Year Campaign", "Easter Sale",
+    "Mother's Day", "Father's Day", "Memorial Day", "Labor Day", "Halloween Campaign",
+    "Product Launch", "Seasonal Collection", "Limited Edition", "Early Bird", "Clearance Sale",
+    "Customer Appreciation", "Loyalty Program", "Referral Campaign", "App Download", "Newsletter Signup"
+  ];
   
-  for (let i = 0; i < 12; i++) {
+  const now = new Date();
+  
+  for (let i = 0; i < 25; i++) {
     const platform = platforms[Math.floor(Math.random() * platforms.length)];
     const campaignType = campaignTypes[Math.floor(Math.random() * campaignTypes.length)];
-    const budget = 1000 + Math.random() * 9000;
-    const spent = budget * (0.3 + Math.random() * 0.6);
-    const conversions = Math.floor(spent / (15 + Math.random() * 35));
-    const ctr = (1 + Math.random() * 4).toFixed(1);
+    const budget = 500 + Math.random() * 15000;
+    const spent = budget * (0.2 + Math.random() * 0.7);
+    const conversions = Math.floor(spent / (10 + Math.random() * 40));
+    const ctr = (0.8 + Math.random() * 4.5).toFixed(1);
     const status = statuses[Math.floor(Math.random() * statuses.length)];
     
-    const createdDate = new Date();
-    createdDate.setMonth(createdDate.getMonth() - Math.floor(Math.random() * 6));
+    // Generate more realistic date ranges - spread over last 12 months
+    const createdDate = new Date(now);
+    createdDate.setMonth(createdDate.getMonth() - Math.floor(Math.random() * 12));
+    createdDate.setDate(Math.floor(Math.random() * 28) + 1);
+    createdDate.setHours(Math.floor(Math.random() * 24), Math.floor(Math.random() * 60));
     
     const updatedDate = new Date(createdDate);
-    updatedDate.setDate(updatedDate.getDate() + Math.floor(Math.random() * 30));
+    updatedDate.setDate(updatedDate.getDate() + Math.floor(Math.random() * 45));
     
     campaigns.push({
       id: (i + 1).toString(),
@@ -45,7 +57,8 @@ const generateCampaignData = (): Campaign[] => {
     });
   }
   
-  return campaigns;
+  // Sort campaigns by creation date (newest first)
+  return campaigns.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 };
 
 export const mockCampaigns: Campaign[] = generateCampaignData();
