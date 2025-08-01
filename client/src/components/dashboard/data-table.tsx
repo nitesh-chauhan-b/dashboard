@@ -1,23 +1,40 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit2, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { Edit2, Trash2, ChevronUp, ChevronDown, Plus, Eye } from "lucide-react";
 import { Campaign } from "@shared/schema";
-import { mockCampaigns } from "@/lib/mock-data";
+import { CampaignModal } from "@/components/modals/campaign-modal";
+import { saveCampaigns, loadCampaigns, initializeStorage } from "@/lib/local-storage";
+import { useToast } from "@/hooks/use-toast";
 
 type SortField = keyof Campaign | null;
 type SortDirection = "asc" | "desc";
 
 export function DataTable() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'create'>('view');
+  
+  const { toast } = useToast();
+
+  // Initialize and load data
+  useEffect(() => {
+    initializeStorage();
+    const loadedCampaigns = loadCampaigns();
+    setCampaigns(loadedCampaigns);
+  }, []);
   
   const itemsPerPage = 10;
 
@@ -31,7 +48,7 @@ export function DataTable() {
   };
 
   const filteredAndSortedCampaigns = useMemo(() => {
-    let filtered = mockCampaigns.filter((campaign) => {
+    let filtered = campaigns.filter((campaign) => {
       const matchesSearch = 
         campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         campaign.platform.toLowerCase().includes(searchTerm.toLowerCase());
@@ -59,7 +76,7 @@ export function DataTable() {
     }
 
     return filtered;
-  }, [searchTerm, statusFilter, sortField, sortDirection]);
+  }, [campaigns, searchTerm, statusFilter, sortField, sortDirection]);
 
   const totalPages = Math.ceil(filteredAndSortedCampaigns.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -84,6 +101,69 @@ export function DataTable() {
     return sortDirection === "asc" ? 
       <ChevronUp className="ml-1 h-4 w-4" /> : 
       <ChevronDown className="ml-1 h-4 w-4" />;
+  };
+
+  // CRUD functions
+  const handleView = (campaign: Campaign) => {
+    setSelectedCampaign(campaign);
+    setModalMode('view');
+    setModalOpen(true);
+  };
+
+  const handleEdit = (campaign: Campaign) => {
+    setSelectedCampaign(campaign);
+    setModalMode('edit');
+    setModalOpen(true);
+  };
+
+  const handleCreate = () => {
+    setSelectedCampaign(null);
+    setModalMode('create');
+    setModalOpen(true);
+  };
+
+  const handleSave = (campaignData: Partial<Campaign>) => {
+    let updatedCampaigns = [...campaigns];
+    
+    if (modalMode === 'create') {
+      const newCampaign: Campaign = {
+        ...campaignData as Campaign,
+        id: Date.now().toString(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      updatedCampaigns.unshift(newCampaign);
+      toast({
+        title: "Campaign Created",
+        description: "New campaign has been created successfully.",
+      });
+    } else if (modalMode === 'edit' && selectedCampaign) {
+      const index = updatedCampaigns.findIndex(c => c.id === selectedCampaign.id);
+      if (index !== -1) {
+        updatedCampaigns[index] = {
+          ...updatedCampaigns[index],
+          ...campaignData,
+          updatedAt: new Date()
+        };
+        toast({
+          title: "Campaign Updated",
+          description: "Campaign has been updated successfully.",
+        });
+      }
+    }
+    
+    setCampaigns(updatedCampaigns);
+    saveCampaigns(updatedCampaigns);
+  };
+
+  const handleDelete = (campaignId: string) => {
+    const updatedCampaigns = campaigns.filter(c => c.id !== campaignId);
+    setCampaigns(updatedCampaigns);
+    saveCampaigns(updatedCampaigns);
+    toast({
+      title: "Campaign Deleted",
+      description: "Campaign has been deleted successfully.",
+    });
   };
 
   return (
@@ -114,6 +194,10 @@ export function DataTable() {
                 <SelectItem value="completed">Completed</SelectItem>
               </SelectContent>
             </Select>
+            <Button onClick={handleCreate} className="gradient-primary text-white">
+              <Plus className="mr-2 h-4 w-4" />
+              New Campaign
+            </Button>
           </div>
         </div>
       </CardHeader>
@@ -196,10 +280,26 @@ export function DataTable() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="icon">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleView(campaign)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleEdit(campaign)}
+                      >
                         <Edit2 className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleDelete(campaign.id)}
+                        className="text-destructive hover:text-destructive"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -248,6 +348,16 @@ export function DataTable() {
           </div>
         </div>
       </CardContent>
+      
+      {/* Campaign Modal */}
+      <CampaignModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        campaign={selectedCampaign}
+        mode={modalMode}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </Card>
   );
 }

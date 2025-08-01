@@ -25,7 +25,7 @@ const generateCampaignData = (): Campaign[] => {
   
   const now = new Date();
   
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < 100; i++) {
     const platform = platforms[Math.floor(Math.random() * platforms.length)];
     const campaignType = campaignTypes[Math.floor(Math.random() * campaignTypes.length)];
     const budget = 500 + Math.random() * 15000;

@@ -39,10 +39,16 @@ export function ChartsSection() {
               <CardTitle>Revenue Over Time</CardTitle>
               <div className="flex items-center space-x-6 mt-2">
                 <div className="flex items-center">
-                  <div className="w-3 h-3 bg-primary rounded-full mr-2"></div>
+                  <div className="w-3 h-3 bg-[#0ea5e9] rounded-full mr-2"></div>
                   <span className="text-sm text-muted-foreground">Total Revenue</span>
                   <span className="text-sm font-medium text-foreground ml-2">$32,839.99</span>
-                  <span className="text-xs text-green-600 dark:text-green-400 ml-2">55%</span>
+                  <span className="text-xs text-green-600 dark:text-green-400 ml-2">• 55%</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-[#f97316] rounded-full mr-2"></div>
+                  <span className="text-sm text-muted-foreground">Total Target</span>
+                  <span className="text-sm font-medium text-foreground ml-2">$30,932.12</span>
+                  <span className="text-xs text-green-600 dark:text-green-400 ml-2">• 45%</span>
                 </div>
               </div>
             </div>
@@ -70,9 +76,16 @@ export function ChartsSection() {
                   <Line 
                     type="monotone" 
                     dataKey="revenue" 
-                    stroke="#3b82f6"
+                    stroke="#0ea5e9"
                     strokeWidth={3}
-                    dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                    dot={{ fill: "#0ea5e9", strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="target" 
+                    stroke="#f97316"
+                    strokeWidth={3}
+                    dot={{ fill: "#f97316", strokeWidth: 2, r: 4 }}
                     activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2 }}
                   />
                   <Line 

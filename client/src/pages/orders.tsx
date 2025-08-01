@@ -1,85 +1,33 @@
-import { useState } from "react";
-import { Sidebar } from "@/components/dashboard/sidebar";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Filter, Package, Eye, Truck } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Eye, Search, Package, Truck, DollarSign } from "lucide-react";
+import { OrderModal } from "@/components/modals/order-modal";
+import { Order, saveOrders, loadOrders, initializeStorage } from "@/lib/local-storage";
 import { format } from "date-fns";
 
-// Mock orders data
-const mockOrders = [
-  {
-    id: "ORD-2025-001",
-    customer: "John Smith",
-    email: "john@example.com",
-    product: "Premium Analytics Dashboard",
-    amount: 299.99,
-    status: "completed",
-    date: new Date(2025, 0, 15),
-    tracking: "TRK123456789"
-  },
-  {
-    id: "ORD-2025-002", 
-    customer: "Sarah Johnson",
-    email: "sarah@example.com",
-    product: "Basic Plan Subscription",
-    amount: 99.99,
-    status: "processing",
-    date: new Date(2025, 0, 14),
-    tracking: "TRK987654321"
-  },
-  {
-    id: "ORD-2025-003",
-    customer: "Mike Wilson",
-    email: "mike@example.com", 
-    product: "Enterprise Suite",
-    amount: 999.99,
-    status: "shipped",
-    date: new Date(2025, 0, 13),
-    tracking: "TRK456789123"
-  },
-  {
-    id: "ORD-2025-004",
-    customer: "Emma Davis",
-    email: "emma@example.com",
-    product: "Marketing Tools Pack",
-    amount: 199.99,
-    status: "pending",
-    date: new Date(2025, 0, 12),
-    tracking: null
-  },
-  {
-    id: "ORD-2025-005",
-    customer: "Alex Chen",
-    email: "alex@example.com",
-    product: "Data Visualization Suite",
-    amount: 499.99,
-    status: "completed",
-    date: new Date(2025, 0, 11),
-    tracking: "TRK789123456"
-  }
-];
-
-const statusVariants = {
-  completed: "default",
-  processing: "secondary", 
-  shipped: "outline",
-  pending: "destructive"
-} as const;
-
-export default function Orders() {
+export function Orders() {
+  const [orders, setOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const filteredOrders = mockOrders.filter((order) => {
+  // Initialize and load data
+  useEffect(() => {
+    initializeStorage();
+    const loadedOrders = loadOrders();
+    setOrders(loadedOrders);
+  }, []);
+
+  const filteredOrders = orders.filter((order) => {
     const matchesSearch = 
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.product.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
@@ -87,183 +35,207 @@ export default function Orders() {
     return matchesSearch && matchesStatus;
   });
 
-  const totalRevenue = mockOrders.reduce((sum, order) => sum + order.amount, 0);
-  const completedOrders = mockOrders.filter(o => o.status === "completed").length;
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setModalOpen(true);
+  };
+
+  const getStatusVariant = (status: Order['status']) => {
+    switch (status) {
+      case "completed":
+        return "default";
+      case "processing":
+        return "secondary";
+      case "shipped":
+        return "outline";
+      case "pending":
+        return "destructive";
+      default:
+        return "outline";
+    }
+  };
+
+  // Calculate summary statistics
+  const totalRevenue = orders.reduce((sum, order) => sum + order.amount, 0);
+  const completedOrders = orders.filter(order => order.status === 'completed').length;
+  const processingOrders = orders.filter(order => order.status === 'processing').length;
+  const averageOrderValue = orders.length > 0 ? totalRevenue / orders.length : 0;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Sidebar />
-      
-      <div className="lg:ml-64 min-h-screen">
-        <header className="bg-card border-b border-border p-4 lg:p-6 shadow-sm">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
-            <div className="lg:pl-0 pl-12">
-              <h1 className="text-xl lg:text-2xl font-bold text-foreground">Orders Management</h1>
-              <p className="text-sm lg:text-base text-muted-foreground">
-                Track and manage customer orders and shipments.
+    <div className="space-y-6 p-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Orders</h1>
+        <p className="text-muted-foreground">
+          Track and manage customer orders across all platforms
+        </p>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${totalRevenue.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground">
+              From {orders.length} orders
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{orders.length}</div>
+            <p className="text-xs text-muted-foreground">
+              +12% from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+            <Package className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{completedOrders}</div>
+            <p className="text-xs text-muted-foreground">
+              {Math.round((completedOrders / orders.length) * 100)}% completion rate
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${averageOrderValue.toFixed(2)}</div>
+            <p className="text-xs text-muted-foreground">
+              Per order
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Orders Table */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Recent Orders</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Complete order history and tracking information
               </p>
             </div>
-            
-            <div className="flex items-center gap-3">
-              <Button onClick={() => setShowFilters(!showFilters)} variant="outline" size="sm">
-                <Filter className="mr-2 h-4 w-4" />
-                Filters
-              </Button>
-              <Button className="gradient-primary text-white">
-                <Package className="mr-2 h-4 w-4" />
-                New Order
-              </Button>
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search orders..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 w-64"
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </header>
-        
-        <main className="p-4 lg:p-6">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Total Orders</p>
-                    <p className="text-3xl font-bold text-foreground">{mockOrders.length}</p>
-                  </div>
-                  <Package className="h-8 w-8 text-primary" />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Total Revenue</p>
-                    <p className="text-3xl font-bold text-foreground">${totalRevenue.toLocaleString()}</p>
-                  </div>
-                  <div className="h-8 w-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                    <span className="text-lg">💰</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Completed Orders</p>
-                    <p className="text-3xl font-bold text-foreground">{completedOrders}</p>
-                  </div>
-                  <div className="h-8 w-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                    <span className="text-lg">✅</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Order ID</TableHead>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Tracking</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrders.slice(0, 50).map((order) => (
+                  <TableRow key={order.id} className="hover:bg-muted/50">
+                    <TableCell className="font-medium">{order.id}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{order.customer}</div>
+                        <div className="text-sm text-muted-foreground">{order.email}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{order.product}</TableCell>
+                    <TableCell className="font-medium">${order.amount.toFixed(2)}</TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusVariant(order.status)}>
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{format(order.date, "MMM dd, yyyy")}</TableCell>
+                    <TableCell>
+                      {order.tracking ? (
+                        <div className="flex items-center gap-1">
+                          <Truck className="h-3 w-3 text-blue-500" />
+                          <span className="text-sm font-mono">{order.tracking}</span>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewOrder(order)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
+          
+          {filteredOrders.length === 0 && (
+            <div className="text-center py-8">
+              <Package className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-2 text-lg font-medium">No orders found</h3>
+              <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                <div>
-                  <CardTitle>Order Management</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    {filteredOrders.length} of {mockOrders.length} orders
-                  </p>
-                </div>
-                
-                <div className="flex items-center space-x-3">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search orders..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-9 w-64"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {showFilters && (
-                <div className="pt-4 border-t">
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue placeholder="Filter by status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Status</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="processing">Processing</SelectItem>
-                      <SelectItem value="shipped">Shipped</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </CardHeader>
-            
-            <CardContent>
-              <div className="rounded-md border overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Tracking</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredOrders.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell className="font-medium">{order.id}</TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">{order.customer}</div>
-                            <div className="text-sm text-muted-foreground">{order.email}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>{order.product}</TableCell>
-                        <TableCell className="font-medium">${order.amount.toFixed(2)}</TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {format(order.date, "MMM dd, yyyy")}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={statusVariants[order.status as keyof typeof statusVariants]}>
-                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {order.tracking ? (
-                            <div className="flex items-center text-sm">
-                              <Truck className="mr-1 h-3 w-3" />
-                              {order.tracking}
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">-</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="mr-1 h-3 w-3" />
-                              View
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
+      {/* Order Details Modal */}
+      <OrderModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        order={selectedOrder}
+      />
     </div>
   );
 }

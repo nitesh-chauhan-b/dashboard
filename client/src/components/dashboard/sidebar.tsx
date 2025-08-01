@@ -122,7 +122,7 @@ export function Sidebar() {
             <Button
               variant="ghost"
               size="icon"
-              className="fixed top-4 left-4 z-50 lg:hidden"
+              className="fixed top-4 left-4 z-50 lg:hidden bg-white dark:bg-gray-800 shadow-lg border"
             >
               <Menu className="h-6 w-6" />
             </Button>
