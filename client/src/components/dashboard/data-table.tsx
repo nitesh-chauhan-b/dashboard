@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Edit2, Trash2, ChevronUp, ChevronDown, Plus, Eye } from "lucide-react";
+import { Edit2, Trash2, ChevronUp, ChevronDown, Plus } from "lucide-react";
 import { Campaign } from "@shared/schema";
 import { CampaignModal } from "@/components/modals/campaign-modal";
 import { saveCampaigns, loadCampaigns, initializeStorage } from "@/lib/local-storage";
@@ -108,12 +108,6 @@ export function DataTable({ dateFilter }: DataTableProps) {
   };
 
   // CRUD functions
-  const handleView = (campaign: Campaign) => {
-    setSelectedCampaign(campaign);
-    setModalMode('view');
-    setModalOpen(true);
-  };
-
   const handleEdit = (campaign: Campaign) => {
     setSelectedCampaign(campaign);
     setModalMode('edit');
@@ -173,45 +167,49 @@ export function DataTable({ dateFilter }: DataTableProps) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col space-y-4">
           <div>
             <CardTitle>Campaign Performance</CardTitle>
             <p className="text-sm text-muted-foreground">
               Detailed breakdown of your marketing campaigns
             </p>
           </div>
-          <div className="flex items-center space-x-3">
-            <Input
-              placeholder="Search campaigns..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64"
-            />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="paused">Paused</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button onClick={handleCreate} className="gradient-primary text-white">
-              <Plus className="mr-2 h-4 w-4" />
-              New Campaign
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+            <div className="flex-1 min-w-[200px]">
+              <Input
+                placeholder="Search campaigns..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="flex gap-3 sm:flex-row w-full sm:w-auto">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-full sm:w-40">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="paused">Paused</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={handleCreate} className="gradient-primary text-white w-full sm:w-auto whitespace-nowrap">
+                <Plus className="mr-2 h-4 w-4" />
+                New Campaign
+              </Button>
+            </div>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="overflow-x-auto rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
                   onClick={() => handleSort("name")}
                 >
                   <div className="flex items-center">
@@ -220,7 +218,7 @@ export function DataTable({ dateFilter }: DataTableProps) {
                   </div>
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
                   onClick={() => handleSort("platform")}
                 >
                   <div className="flex items-center">
@@ -229,7 +227,7 @@ export function DataTable({ dateFilter }: DataTableProps) {
                   </div>
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
                   onClick={() => handleSort("budget")}
                 >
                   <div className="flex items-center">
@@ -238,7 +236,7 @@ export function DataTable({ dateFilter }: DataTableProps) {
                   </div>
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
                   onClick={() => handleSort("spent")}
                 >
                   <div className="flex items-center">
@@ -247,7 +245,7 @@ export function DataTable({ dateFilter }: DataTableProps) {
                   </div>
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
                   onClick={() => handleSort("conversions")}
                 >
                   <div className="flex items-center">
@@ -256,7 +254,7 @@ export function DataTable({ dateFilter }: DataTableProps) {
                   </div>
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="cursor-pointer hover:bg-muted/50 transition-colors whitespace-nowrap"
                   onClick={() => handleSort("ctr")}
                 >
                   <div className="flex items-center">
@@ -264,33 +262,26 @@ export function DataTable({ dateFilter }: DataTableProps) {
                     <SortIcon field="ctr" />
                   </div>
                 </TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="whitespace-nowrap">Status</TableHead>
+                <TableHead className="whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentData.map((campaign) => (
                 <TableRow key={campaign.id} className="hover:bg-muted/50">
-                  <TableCell className="font-medium">{campaign.name}</TableCell>
-                  <TableCell>{campaign.platform}</TableCell>
-                  <TableCell>${parseFloat(campaign.budget).toLocaleString()}</TableCell>
-                  <TableCell>${parseFloat(campaign.spent).toLocaleString()}</TableCell>
-                  <TableCell>{campaign.conversions}</TableCell>
-                  <TableCell>{campaign.ctr}%</TableCell>
-                  <TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{campaign.name}</TableCell>
+                  <TableCell className="whitespace-nowrap">{campaign.platform}</TableCell>
+                  <TableCell className="whitespace-nowrap">${parseFloat(campaign.budget).toLocaleString()}</TableCell>
+                  <TableCell className="whitespace-nowrap">${parseFloat(campaign.spent).toLocaleString()}</TableCell>
+                  <TableCell className="whitespace-nowrap">{campaign.conversions}</TableCell>
+                  <TableCell className="whitespace-nowrap">{campaign.ctr}%</TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <Badge variant={getStatusVariant(campaign.status)}>
                       {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <div className="flex items-center space-x-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => handleView(campaign)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
                       <Button 
                         variant="ghost" 
                         size="icon"
@@ -315,12 +306,12 @@ export function DataTable({ dateFilter }: DataTableProps) {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between mt-6">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-6">
+          <div className="text-sm text-muted-foreground order-2 sm:order-1">
             Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedCampaigns.length)} of{" "}
             {filteredAndSortedCampaigns.length} results
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 order-1 sm:order-2">
             <Button
               variant="outline"
               size="sm"
@@ -330,16 +321,24 @@ export function DataTable({ dateFilter }: DataTableProps) {
               Previous
             </Button>
             
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                size="sm"
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </Button>
-            ))}
+            <div className="hidden sm:flex items-center space-x-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </Button>
+              ))}
+            </div>
+            
+            <div className="sm:hidden flex items-center space-x-2">
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
             
             <Button
               variant="outline"

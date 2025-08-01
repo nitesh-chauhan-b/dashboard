@@ -77,17 +77,27 @@ export function ChartsSection() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={mockRevenueData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="currentColor"
+                    tick={{ fill: "currentColor", fontSize: 12 }}
+                    style={{ fill: "hsl(var(--foreground))" }}
+                  />
                   <YAxis 
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="currentColor"
                     tickFormatter={(value) => `$${(value / 1000)}K`}
+                    tick={{ fill: "currentColor", fontSize: 12 }}
+                    style={{ fill: "hsl(var(--foreground))" }}
                   />
                   <Tooltip 
                     contentStyle={{
                       backgroundColor: "hsl(var(--card))",
                       border: "1px solid hsl(var(--border))",
-                      borderRadius: "var(--radius)"
+                      borderRadius: "var(--radius)",
+                      color: "hsl(var(--foreground))"
                     }}
+                    labelStyle={{ color: "hsl(var(--foreground))" }}
+                    itemStyle={{ color: "hsl(var(--foreground))" }}
                   />
                   <Line 
                     type="monotone" 
@@ -164,8 +174,15 @@ export function ChartsSection() {
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={mockRegionData}>
                   <PolarGrid stroke="hsl(var(--border))" />
-                  <PolarAngleAxis dataKey="region" tick={{ fontSize: 12 }} />
-                  <PolarRadiusAxis tick={{ fontSize: 10 }} />
+                  <PolarAngleAxis 
+                    dataKey="region" 
+                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
+                    stroke="hsl(var(--foreground))"
+                  />
+                  <PolarRadiusAxis 
+                    tick={{ fontSize: 10, fill: "hsl(var(--foreground))" }}
+                    stroke="hsl(var(--foreground))"
+                  />
                   <Radar
                     name="Sales"
                     dataKey="sales"

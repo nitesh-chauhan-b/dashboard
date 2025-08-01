@@ -77,6 +77,7 @@ app.use((req, res, next) => {
   }
   
   server.listen(serverOptions, () => {
-    log(`serving on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
+    // open(`http://localhost:${port}`); // <-- this will open the browser
   });
 })();
