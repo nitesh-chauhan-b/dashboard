@@ -109,12 +109,12 @@ export const mockRegionData = [
 ];
 
 export const mockPlatformData = [
-  { platform: "Amazon", percentage: 45, color: "hsl(var(--chart-1))" },
-  { platform: "Tokopedia", percentage: 25, color: "hsl(var(--chart-2))" },
-  { platform: "Alibaba", percentage: 30, color: "hsl(var(--chart-3))" },
+  { platform: "Amazon", percentage: 45, color: "#3b82f6" },
+  { platform: "Tokopedia", percentage: 25, color: "#10b981" },
+  { platform: "Alibaba", percentage: 30, color: "#8b5cf6" },
 ];
 
 export const mockUserData = [
-  { plan: "Premium", users: 1809, color: "hsl(var(--chart-1))" },
-  { plan: "Basic", users: 515, color: "hsl(var(--muted))" },
+  { plan: "Premium", users: 1809, color: "#3b82f6" },
+  { plan: "Basic", users: 515, color: "#10b981" },
 ];

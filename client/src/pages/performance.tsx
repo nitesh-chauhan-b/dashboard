@@ -29,10 +29,10 @@ const performanceData = [
 ];
 
 const channelData = [
-  { name: "Google Ads", value: 45, color: "hsl(var(--chart-1))" },
-  { name: "Facebook", value: 30, color: "hsl(var(--chart-2))" },
-  { name: "Instagram", value: 15, color: "hsl(var(--chart-3))" },
-  { name: "LinkedIn", value: 10, color: "hsl(var(--chart-4))" },
+  { name: "Google Ads", value: 45, color: "#3b82f6" },
+  { name: "Facebook", value: 30, color: "#10b981" },
+  { name: "Instagram", value: 15, color: "#8b5cf6" },
+  { name: "LinkedIn", value: 10, color: "#f59e0b" },
 ];
 
 const kpiData = [
@@ -118,8 +118,8 @@ export default function Performance() {
                       <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                       <YAxis stroke="hsl(var(--muted-foreground))" />
                       <Tooltip />
-                      <Line type="monotone" dataKey="clicks" stroke="hsl(var(--chart-1))" strokeWidth={2} />
-                      <Line type="monotone" dataKey="conversions" stroke="hsl(var(--chart-2))" strokeWidth={2} />
+                      <Line type="monotone" dataKey="clicks" stroke="#3b82f6" strokeWidth={2} />
+                      <Line type="monotone" dataKey="conversions" stroke="#10b981" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -180,7 +180,7 @@ export default function Performance() {
                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
                     <YAxis stroke="hsl(var(--muted-foreground))" />
                     <Tooltip />
-                    <Bar dataKey="cost" fill="hsl(var(--chart-3))" />
+                    <Bar dataKey="cost" fill="#8b5cf6" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

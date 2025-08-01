@@ -8,6 +8,7 @@ import Dashboard from "@/pages/dashboard";
 import Campaigns from "@/pages/campaigns";
 import Performance from "@/pages/performance";
 import Products from "@/pages/products";
+import Orders from "@/pages/orders";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/campaigns" component={Campaigns} />
       <Route path="/performance" component={Performance} />
       <Route path="/products" component={Products} />
+      <Route path="/orders" component={Orders} />
       <Route component={NotFound} />
     </Switch>
   );
