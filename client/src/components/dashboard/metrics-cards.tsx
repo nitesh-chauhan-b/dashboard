@@ -44,7 +44,7 @@ function MetricCard({ title, value, change, changeType, icon, color }: MetricCar
     <Card className="hover:shadow-md transition-shadow duration-200">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <div className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center`}>
+          <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
             {icon}
           </div>
           <span className={`text-sm font-medium ${
@@ -70,7 +70,7 @@ export function MetricsCards() {
         change="+12.5%"
         changeType="positive"
         icon={<DollarSign className="h-6 w-6 text-white" />}
-        color="bg-green-100 dark:bg-green-900/30"
+        color=""
       />
       
       <MetricCard
@@ -79,7 +79,7 @@ export function MetricsCards() {
         change="+8.2%"
         changeType="positive"
         icon={<Users className="h-6 w-6 text-white" />}
-        color="bg-blue-100 dark:bg-blue-900/30"
+        color=""
       />
       
       <MetricCard
@@ -88,7 +88,7 @@ export function MetricsCards() {
         change="-2.4%"
         changeType="negative"
         icon={<TrendingUp className="h-6 w-6 text-white" />}
-        color="bg-purple-100 dark:bg-purple-900/30"
+        color=""
       />
       
       <MetricCard
@@ -97,7 +97,7 @@ export function MetricsCards() {
         change="+15.3%"
         changeType="positive"
         icon={<Percent className="h-6 w-6 text-white" />}
-        color="bg-orange-100 dark:bg-orange-900/30"
+        color=""
       />
     </div>
   );

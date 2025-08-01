@@ -70,16 +70,18 @@ export function ChartsSection() {
                   <Line 
                     type="monotone" 
                     dataKey="revenue" 
-                    stroke="hsl(var(--primary))" 
+                    stroke="#3b82f6"
                     strokeWidth={3}
-                    dot={{ fill: "hsl(var(--primary))", strokeWidth: 2 }}
+                    dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2 }}
                   />
                   <Line 
                     type="monotone" 
                     dataKey="target" 
-                    stroke="hsl(var(--chart-3))" 
+                    stroke="#10b981"
                     strokeWidth={2}
                     strokeDasharray="5 5"
+                    dot={{ fill: "#10b981", strokeWidth: 2, r: 3 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -138,10 +140,10 @@ export function ChartsSection() {
                   <Radar
                     name="Sales"
                     dataKey="sales"
-                    stroke="hsl(var(--primary))"
-                    fill="hsl(var(--primary))"
-                    fillOpacity={0.2}
-                    strokeWidth={2}
+                    stroke="#8b5cf6"
+                    fill="#8b5cf6"
+                    fillOpacity={0.3}
+                    strokeWidth={3}
                   />
                 </RadarChart>
               </ResponsiveContainer>
