@@ -1,6 +1,15 @@
 # Overview
 
-This is an analytics dashboard application called "ADmyBRAND" that provides insights into advertising campaigns and performance metrics. The application displays key performance indicators, revenue tracking, campaign management, and data visualization through charts and tables. It's built as a full-stack web application with a modern React frontend and Express.js backend, designed for marketing teams to monitor and analyze their advertising performance.
+This is an analytics dashboard application called "ADmyBRAND Insights" that provides comprehensive insights into advertising campaigns and performance metrics. The application displays key performance indicators, revenue tracking, campaign management, and data visualization through interactive charts and tables. It's built as a full-stack web application with a modern React frontend and Express.js backend, designed for marketing teams to monitor and analyze their advertising performance.
+
+## Recent Changes (January 2025)
+
+- ✅ **Complete CRUD Implementation**: Added full create, read, update, delete functionality for campaigns, orders, and products with modal interfaces
+- ✅ **Data Persistence**: Implemented localStorage-based data persistence with 100+ sample entries across all entities
+- ✅ **UI/UX Improvements**: Removed date filters from dashboard header and dark/light mode toggle from overview page per user requirements
+- ✅ **Mobile Optimization**: Fixed mobile menu positioning to stay at top corner only
+- ✅ **Brand Integration**: Properly sized ADmyBRAND logo and integrated brand styling throughout
+- ✅ **Documentation**: Created comprehensive README.md with installation, setup, and architecture documentation
 
 # User Preferences
 
