@@ -73,6 +73,8 @@ export class MemStorage implements IStorage {
         conversions: 156,
         ctr: "3.20",
         status: "active",
+        startDate: new Date(2024, 5, 1),
+        endDate: new Date(2024, 7, 31),
       },
       {
         name: "Black Friday Promotion",
@@ -82,6 +84,8 @@ export class MemStorage implements IStorage {
         conversions: 289,
         ctr: "4.10",
         status: "active",
+        startDate: new Date(2024, 10, 15),
+        endDate: new Date(2024, 10, 30),
       },
       {
         name: "Holiday Campaign",
@@ -91,6 +95,8 @@ export class MemStorage implements IStorage {
         conversions: 98,
         ctr: "2.80",
         status: "paused",
+        startDate: new Date(2024, 11, 1),
+        endDate: new Date(2024, 11, 25),
       },
     ];
 
@@ -105,6 +111,8 @@ export class MemStorage implements IStorage {
         conversions: campaign.conversions || 0,
         ctr: campaign.ctr || "0",
         status: campaign.status || "active",
+        startDate: campaign.startDate || new Date(),
+        endDate: campaign.endDate || null,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -252,6 +260,8 @@ export class MemStorage implements IStorage {
       conversions: insertCampaign.conversions || 0,
       ctr: insertCampaign.ctr || "0",
       status: insertCampaign.status || "active",
+      startDate: insertCampaign.startDate,
+      endDate: insertCampaign.endDate || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

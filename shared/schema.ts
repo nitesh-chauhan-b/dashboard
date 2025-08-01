@@ -18,6 +18,8 @@ export const campaigns = pgTable("campaigns", {
   conversions: integer("conversions").notNull().default(0),
   ctr: decimal("ctr", { precision: 5, scale: 2 }).notNull().default('0'),
   status: text("status").notNull().default('active'),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

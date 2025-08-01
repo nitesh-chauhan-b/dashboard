@@ -26,8 +26,24 @@ import {
   mockPlatformData, 
   mockUserData 
 } from "@/lib/mock-data";
+import { dynamicData } from "@/lib/dynamic-data";
+import { useEffect, useState } from "react";
 
 export function ChartsSection() {
+  const [revenueData, setRevenueData] = useState(dynamicData.generateRevenueChartData());
+  const [trafficData, setTrafficData] = useState(dynamicData.generateTrafficData());
+  const [conversionData, setConversionData] = useState(dynamicData.generateConversionData());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRevenueData(dynamicData.generateRevenueChartData());
+      setTrafficData(dynamicData.generateTrafficData());
+      setConversionData(dynamicData.generateConversionData());
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       {/* First Row Charts */}

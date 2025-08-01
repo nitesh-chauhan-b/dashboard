@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { DollarSign, Users, TrendingUp, Percent } from "lucide-react";
 import { useEffect, useState } from "react";
+import { dynamicData } from "@/lib/dynamic-data";
 
 interface MetricCardProps {
   title: string;
@@ -62,11 +63,21 @@ function MetricCard({ title, value, change, changeType, icon, color }: MetricCar
 }
 
 export function MetricsCards() {
+  const [metrics, setMetrics] = useState(dynamicData.getCurrentMetrics());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics(dynamicData.getCurrentMetrics());
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <MetricCard
         title="Total Revenue"
-        value="$32,499.93"
+        value={`$${metrics.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         change="+12.5%"
         changeType="positive"
         icon={<DollarSign className="h-6 w-6 text-white" />}
@@ -75,7 +86,7 @@ export function MetricsCards() {
       
       <MetricCard
         title="Total Users"
-        value="5,211,832"
+        value={metrics.totalUsers.toLocaleString()}
         change="+8.2%"
         changeType="positive"
         icon={<Users className="h-6 w-6 text-white" />}
@@ -84,7 +95,7 @@ export function MetricsCards() {
       
       <MetricCard
         title="Conversions"
-        value="2,324"
+        value={metrics.conversions.toLocaleString()}
         change="-2.4%"
         changeType="negative"
         icon={<TrendingUp className="h-6 w-6 text-white" />}
@@ -93,7 +104,7 @@ export function MetricsCards() {
       
       <MetricCard
         title="Growth Rate"
-        value="4.83%"
+        value={`${metrics.growthRate.toFixed(2)}%`}
         change="+15.3%"
         changeType="positive"
         icon={<Percent className="h-6 w-6 text-white" />}

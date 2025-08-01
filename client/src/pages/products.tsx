@@ -257,7 +257,7 @@ export function Products() {
                     </TableCell>
                     <TableCell>
                       <Badge variant={getStatusVariant(product.status)}>
-                        <span className={getStatusColor(product.status)}>
+                        <span className="text-white">
                           {product.status.replace('_', ' ').charAt(0).toUpperCase() + product.status.replace('_', ' ').slice(1)}
                         </span>
                       </Badge>

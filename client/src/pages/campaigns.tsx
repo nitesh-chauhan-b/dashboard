@@ -1,18 +1,84 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { DataTable } from "@/components/dashboard/data-table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DateRangeFilter } from "@/components/campaigns/date-range-filter";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Filter } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Plus, Search, Edit2, Trash2, Calendar, TrendingUp, DollarSign, Target, Users } from "lucide-react";
+import { CampaignModal } from "@/components/modals/campaign-modal";
+import { initializeStorage, loadCampaigns, saveCampaigns } from "@/lib/local-storage";
+import type { Campaign } from "@/lib/local-storage";
+import { isWithinInterval, parseISO } from "date-fns";
+import { DateRange } from "react-day-picker";
+import { dynamicData } from "@/lib/dynamic-data";
 
 export default function Campaigns() {
-  const [dateRange, setDateRange] = useState("30");
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [platformFilter, setPlatformFilter] = useState("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('view');
+  const [metrics, setMetrics] = useState(dynamicData.getCurrentMetrics());
 
-  const handleDateRangeChange = (value: string) => {
-    setDateRange(value);
-    // This would filter the campaigns based on date range
-    console.log(`Filtering campaigns for last ${value} days`);
-  };
+  // Initialize and load data
+  useEffect(() => {
+    initializeStorage();
+    const loadedCampaigns = loadCampaigns();
+    setCampaigns(loadedCampaigns);
+    setFilteredCampaigns(loadedCampaigns);
+  }, []);
+
+  // Update metrics every 5 seconds for dynamic display
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics(dynamicData.getCurrentMetrics());
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Filter campaigns based on search, status, platform and date range
+  useEffect(() => {
+    let filtered = campaigns;
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(campaign =>
+        campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        campaign.platform.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(campaign => campaign.status === statusFilter);
+    }
+
+    // Platform filter
+    if (platformFilter !== "all") {
+      filtered = filtered.filter(campaign => campaign.platform === platformFilter);
+    }
+
+    // Date range filter
+    if (dateRange?.from && dateRange?.to) {
+      filtered = filtered.filter(campaign => {
+        const campaignDate = new Date(campaign.createdAt);
+        return isWithinInterval(campaignDate, {
+          start: dateRange.from!,
+          end: dateRange.to!
+        });
+      });
+    }
+
+    setFilteredCampaigns(filtered);
+  }, [campaigns, searchTerm, statusFilter, platformFilter, dateRange]);
 
   return (
     <div className="min-h-screen bg-background">
