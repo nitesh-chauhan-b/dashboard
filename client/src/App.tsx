@@ -5,12 +5,18 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import Dashboard from "@/pages/dashboard";
+import Campaigns from "@/pages/campaigns";
+import Performance from "@/pages/performance";
+import Products from "@/pages/products";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
+      <Route path="/campaigns" component={Campaigns} />
+      <Route path="/performance" component={Performance} />
+      <Route path="/products" component={Products} />
       <Route component={NotFound} />
     </Switch>
   );

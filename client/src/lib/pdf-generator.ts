@@ -1,43 +1,159 @@
-// This would normally use react-pdf or jsPDF
-// For now, creating a simple implementation structure
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import brandLogoPath from "@assets/brand_logo_1754028925378.png";
+import brandTextPath from "@assets/brand_sample_text_1754028925379.png";
+import { Campaign } from "@shared/schema";
 
 export interface PDFExportOptions {
   title: string;
-  data: any;
+  data: Campaign[];
   charts?: boolean;
   tables?: boolean;
 }
 
-export async function generatePDF(options: PDFExportOptions): Promise<void> {
-  // Simulate PDF generation
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Create a simple text-based report
-      const content = `
-        ADmyBRAND Insights - Analytics Report
-        Generated on: ${new Date().toLocaleDateString()}
-        
-        Key Metrics Summary:
-        • Total Revenue: $32,499.93 (+12.5%)
-        • Total Users: 5,211,832 (+8.2%)
-        • Conversions: 2,324 (-2.4%)
-        • Growth Rate: 4.83% (+15.3%)
-        
-        Campaign Performance:
-        ${JSON.stringify(options.data, null, 2)}
-      `;
-      
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'admybrand-analytics-report.txt';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      resolve();
-    }, 2000);
+async function loadImageAsBase64(src: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx?.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = reject;
+    img.src = src;
   });
+}
+
+export async function generatePDF(options: PDFExportOptions): Promise<void> {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  
+  try {
+    // Load brand assets
+    const logoBase64 = await loadImageAsBase64(brandLogoPath);
+    const brandTextBase64 = await loadImageAsBase64(brandTextPath);
+    
+    // Header with branding
+    doc.addImage(logoBase64, 'PNG', 20, 15, 20, 20);
+    doc.addImage(brandTextBase64, 'PNG', 50, 20, 80, 10);
+    
+    // Title
+    doc.setFontSize(24);
+    doc.setTextColor(40, 44, 52);
+    doc.text('Analytics Dashboard Report', 20, 50);
+    
+    // Date
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Generated on: ${new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })}`, 20, 60);
+    
+    // Key Metrics Section
+    doc.setFontSize(16);
+    doc.setTextColor(40, 44, 52);
+    doc.text('Key Performance Metrics', 20, 80);
+    
+    const metrics = [
+      { label: 'Total Revenue', value: '$32,499.93', change: '+12.5%' },
+      { label: 'Total Users', value: '5,211,832', change: '+8.2%' },
+      { label: 'Conversions', value: '2,324', change: '-2.4%' },
+      { label: 'Growth Rate', value: '4.83%', change: '+15.3%' }
+    ];
+    
+    let yPos = 90;
+    doc.setFontSize(11);
+    metrics.forEach((metric) => {
+      doc.setTextColor(40, 44, 52);
+      doc.text(`• ${metric.label}: ${metric.value}`, 25, yPos);
+      const isPositive = metric.change.startsWith('+');
+      doc.setTextColor(isPositive ? 34 : 239, isPositive ? 197 : 68, isPositive ? 94 : 68);
+      doc.text(metric.change, 120, yPos);
+      yPos += 8;
+    });
+    
+    // Campaign Performance Table
+    yPos += 15;
+    doc.setFontSize(16);
+    doc.setTextColor(40, 44, 52);
+    doc.text('Campaign Performance Details', 20, yPos);
+    
+    const tableData = options.data.map(campaign => [
+      campaign.name,
+      campaign.platform,
+      `$${parseFloat(campaign.budget).toLocaleString()}`,
+      `$${parseFloat(campaign.spent).toLocaleString()}`,
+      campaign.conversions.toString(),
+      `${campaign.ctr}%`,
+      campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)
+    ]);
+    
+    autoTable(doc, {
+      startY: yPos + 10,
+      head: [['Campaign', 'Platform', 'Budget', 'Spent', 'Conversions', 'CTR', 'Status']],
+      body: tableData,
+      theme: 'grid',
+      headStyles: {
+        fillColor: [99, 192, 155],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [249, 250, 251]
+      },
+      styles: {
+        fontSize: 9,
+        cellPadding: 4
+      },
+      columnStyles: {
+        0: { cellWidth: 35 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 15 },
+        6: { cellWidth: 20 }
+      }
+    });
+    
+    // Platform Distribution (if there's space)
+    const finalY = (doc as any).lastAutoTable.finalY || yPos + 50;
+    if (finalY < pageHeight - 60) {
+      doc.setFontSize(16);
+      doc.setTextColor(40, 44, 52);
+      doc.text('Platform Distribution', 20, finalY + 20);
+      
+      const platformStats = options.data.reduce((acc, campaign) => {
+        acc[campaign.platform] = (acc[campaign.platform] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      let platformY = finalY + 30;
+      Object.entries(platformStats).forEach(([platform, count]) => {
+        const percentage = ((count / options.data.length) * 100).toFixed(1);
+        doc.setFontSize(11);
+        doc.setTextColor(40, 44, 52);
+        doc.text(`• ${platform}: ${count} campaigns (${percentage}%)`, 25, platformY);
+        platformY += 8;
+      });
+    }
+    
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Report generated by ADmyBRAND Insights • Page 1`, 20, pageHeight - 10);
+    
+    // Save the PDF
+    doc.save('admybrand-analytics-report.pdf');
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    throw error;
+  }
 }

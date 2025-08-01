@@ -27,7 +27,7 @@ export const metrics = pgTable("metrics", {
   totalRevenue: decimal("total_revenue", { precision: 12, scale: 2 }).notNull(),
   totalUsers: integer("total_users").notNull(),
   conversions: integer("conversions").notNull(),
-  growthRate: decimal("growth_rate", { precision: 5, 2 }).notNull(),
+  growthRate: decimal("growth_rate", { precision: 5, scale: 2 }).notNull(),
   date: timestamp("date").defaultNow(),
 });
 

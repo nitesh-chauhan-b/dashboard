@@ -48,12 +48,12 @@ export function DataTable() {
         
         // Handle numeric fields
         if (sortField === "budget" || sortField === "spent" || sortField === "ctr") {
-          aValue = parseFloat(aValue as string);
-          bValue = parseFloat(bValue as string);
+          aValue = parseFloat(aValue as string) || 0;
+          bValue = parseFloat(bValue as string) || 0;
         }
         
-        if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
-        if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+        if (aValue! < bValue!) return sortDirection === "asc" ? -1 : 1;
+        if (aValue! > bValue!) return sortDirection === "asc" ? 1 : -1;
         return 0;
       });
     }

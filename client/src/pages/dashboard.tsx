@@ -81,14 +81,14 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       <Sidebar />
       
-      <div className="ml-64 min-h-screen">
+      <div className="lg:ml-64 min-h-screen">
         <Header
           onExportPDF={handleExportPDF}
           onExportCSV={handleExportCSV}
           onDateRangeChange={handleDateRangeChange}
         />
         
-        <main className="p-6">
+        <main className="p-4 lg:p-6">
           <MetricsCards />
           <ChartsSection />
           <DataTable />

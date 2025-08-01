@@ -19,7 +19,14 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private campaigns: Map<string, Campaign>;
-  private metrics: Metrics;
+  private metrics: Metrics = {
+    id: randomUUID(),
+    totalRevenue: "32499.93",
+    totalUsers: 5211832,
+    conversions: 2324,
+    growthRate: "4.83",
+    date: new Date(),
+  };
 
   constructor() {
     this.users = new Map();
@@ -74,8 +81,14 @@ export class MemStorage implements IStorage {
     mockCampaigns.forEach(campaign => {
       const id = randomUUID();
       const fullCampaign: Campaign = {
-        ...campaign,
         id,
+        name: campaign.name,
+        platform: campaign.platform,
+        budget: campaign.budget,
+        spent: campaign.spent || "0",
+        conversions: campaign.conversions || 0,
+        ctr: campaign.ctr || "0",
+        status: campaign.status || "active",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -113,8 +126,14 @@ export class MemStorage implements IStorage {
   async createCampaign(insertCampaign: InsertCampaign): Promise<Campaign> {
     const id = randomUUID();
     const campaign: Campaign = {
-      ...insertCampaign,
       id,
+      name: insertCampaign.name,
+      platform: insertCampaign.platform,
+      budget: insertCampaign.budget,
+      spent: insertCampaign.spent || "0",
+      conversions: insertCampaign.conversions || 0,
+      ctr: insertCampaign.ctr || "0",
+      status: insertCampaign.status || "active",
       createdAt: new Date(),
       updatedAt: new Date(),
     };

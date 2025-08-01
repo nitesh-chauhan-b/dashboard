@@ -18,16 +18,16 @@ export function Header({ onExportPDF, onExportCSV, onDateRangeChange }: HeaderPr
   };
 
   return (
-    <header className="bg-card border-b border-border p-6 shadow-sm">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Overview</h1>
-          <p className="text-muted-foreground">
+    <header className="bg-card border-b border-border p-4 lg:p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
+        <div className="lg:pl-0 pl-12">
+          <h1 className="text-xl lg:text-2xl font-bold text-foreground">Overview</h1>
+          <p className="text-sm lg:text-base text-muted-foreground">
             Welcome back! Here's what's happening with your campaigns.
           </p>
         </div>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-wrap items-center gap-2 lg:space-x-4">
           {/* Date Range Filter */}
           <Select defaultValue="30" onValueChange={onDateRangeChange}>
             <SelectTrigger className="w-40">

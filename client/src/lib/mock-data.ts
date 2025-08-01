@@ -9,139 +9,75 @@ export const mockMetrics: Metrics = {
   date: new Date(),
 };
 
-export const mockCampaigns: Campaign[] = [
-  {
-    id: "1",
-    name: "Summer Sale 2024",
-    platform: "Google Ads",
-    budget: "5000.00",
-    spent: "3420.00",
-    conversions: 156,
-    ctr: "3.20",
-    status: "active",
-    createdAt: new Date("2024-06-01"),
-    updatedAt: new Date("2024-07-15"),
-  },
-  {
-    id: "2",
-    name: "Black Friday Promotion",
-    platform: "Facebook Ads",
-    budget: "8000.00",
-    spent: "7200.00",
-    conversions: 289,
-    ctr: "4.10",
-    status: "active",
-    createdAt: new Date("2024-11-01"),
-    updatedAt: new Date("2024-11-20"),
-  },
-  {
-    id: "3",
-    name: "Holiday Campaign",
-    platform: "Instagram",
-    budget: "3000.00",
-    spent: "2100.00",
-    conversions: 98,
-    ctr: "2.80",
-    status: "paused",
-    createdAt: new Date("2024-12-01"),
-    updatedAt: new Date("2024-12-10"),
-  },
-  {
-    id: "4",
-    name: "Product Launch",
-    platform: "LinkedIn",
-    budget: "4500.00",
-    spent: "4500.00",
-    conversions: 67,
-    ctr: "1.90",
-    status: "completed",
-    createdAt: new Date("2024-05-15"),
-    updatedAt: new Date("2024-06-15"),
-  },
-  {
-    id: "5",
-    name: "Back to School",
-    platform: "Google Ads",
-    budget: "6000.00",
-    spent: "4200.00",
-    conversions: 145,
-    ctr: "3.70",
-    status: "active",
-    createdAt: new Date("2024-08-01"),
-    updatedAt: new Date("2024-08-25"),
-  },
-  {
-    id: "6",
-    name: "Valentine's Day",
-    platform: "Facebook Ads",
-    budget: "2500.00",
-    spent: "2500.00",
-    conversions: 89,
-    ctr: "4.50",
-    status: "completed",
-    createdAt: new Date("2024-01-15"),
-    updatedAt: new Date("2024-02-14"),
-  },
-  {
-    id: "7",
-    name: "Spring Collection",
-    platform: "Instagram",
-    budget: "4000.00",
-    spent: "2800.00",
-    conversions: 112,
-    ctr: "3.10",
-    status: "active",
-    createdAt: new Date("2024-03-01"),
-    updatedAt: new Date("2024-03-30"),
-  },
-  {
-    id: "8",
-    name: "Flash Sale",
-    platform: "Google Ads",
-    budget: "1500.00",
-    spent: "980.00",
-    conversions: 45,
-    ctr: "2.30",
-    status: "paused",
-    createdAt: new Date("2024-07-01"),
-    updatedAt: new Date("2024-07-05"),
-  },
-  {
-    id: "9",
-    name: "Brand Awareness",
-    platform: "LinkedIn",
-    budget: "7000.00",
-    spent: "5600.00",
-    conversions: 78,
-    ctr: "1.60",
-    status: "active",
-    createdAt: new Date("2024-04-01"),
-    updatedAt: new Date("2024-05-30"),
-  },
-  {
-    id: "10",
-    name: "Retargeting Campaign",
-    platform: "Facebook Ads",
-    budget: "3500.00",
-    spent: "3100.00",
-    conversions: 134,
-    ctr: "3.90",
-    status: "active",
-    createdAt: new Date("2024-09-01"),
-    updatedAt: new Date("2024-09-20"),
-  },
-];
+// Generate dynamic campaign data based on current time
+const generateCampaignData = (): Campaign[] => {
+  const campaigns = [];
+  const platforms = ["Facebook", "Google Ads", "Instagram", "LinkedIn", "TikTok"];
+  const statuses = ["active", "paused", "completed"] as const;
+  const campaignTypes = ["Holiday Sale", "Spring Launch", "Summer Promo", "Black Friday", "New Product", "Brand Awareness", "Lead Generation", "Retargeting", "Flash Sale", "Valentine's Day"];
+  
+  for (let i = 0; i < 12; i++) {
+    const platform = platforms[Math.floor(Math.random() * platforms.length)];
+    const campaignType = campaignTypes[Math.floor(Math.random() * campaignTypes.length)];
+    const budget = 1000 + Math.random() * 9000;
+    const spent = budget * (0.3 + Math.random() * 0.6);
+    const conversions = Math.floor(spent / (15 + Math.random() * 35));
+    const ctr = (1 + Math.random() * 4).toFixed(1);
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+    
+    const createdDate = new Date();
+    createdDate.setMonth(createdDate.getMonth() - Math.floor(Math.random() * 6));
+    
+    const updatedDate = new Date(createdDate);
+    updatedDate.setDate(updatedDate.getDate() + Math.floor(Math.random() * 30));
+    
+    campaigns.push({
+      id: (i + 1).toString(),
+      name: `${campaignType} Campaign`,
+      platform,
+      budget: budget.toFixed(2),
+      spent: spent.toFixed(2),
+      conversions,
+      ctr,
+      status,
+      createdAt: createdDate,
+      updatedAt: updatedDate,
+    });
+  }
+  
+  return campaigns;
+};
 
-export const mockRevenueData = [
-  { month: "Mar 2023", revenue: 18000, target: 20000 },
-  { month: "Jun 2023", revenue: 15000, target: 18000 },
-  { month: "Sep 2023", revenue: 12000, target: 16000 },
-  { month: "Dec 2023", revenue: 16000, target: 18000 },
-  { month: "Mar 2024", revenue: 22000, target: 20000 },
-  { month: "Jun 2024", revenue: 28000, target: 24000 },
-  { month: "Sep 2024", revenue: 25000, target: 26000 },
-  { month: "Dec 2024", revenue: 32000, target: 30000 },
-];
+export const mockCampaigns: Campaign[] = generateCampaignData();
+
+// Generate dynamic revenue data based on current time
+const generateRevenueData = () => {
+  const data = [];
+  const now = new Date();
+  
+  for (let i = 7; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthName = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    
+    // Simulate realistic revenue data with some randomness
+    const baseRevenue = 15000 + (Math.random() * 10000);
+    const seasonalMultiplier = 1 + (Math.sin((date.getMonth() / 12) * Math.PI * 2) * 0.3);
+    const trendMultiplier = 1 + ((7 - i) * 0.05); // Growth trend
+    
+    const revenue = Math.round(baseRevenue * seasonalMultiplier * trendMultiplier);
+    const target = Math.round(revenue * (0.9 + Math.random() * 0.2));
+    
+    data.push({
+      month: monthName,
+      revenue,
+      target
+    });
+  }
+  
+  return data;
+};
+
+export const mockRevenueData = generateRevenueData();
 
 export const mockCountryData = [
   { country: "Australia", sessions: 634, percentage: 8, flag: "🇦🇺" },
