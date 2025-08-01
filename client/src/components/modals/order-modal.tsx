@@ -48,18 +48,10 @@ export function OrderModal({ isOpen, onClose, order }: OrderModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md w-[95vw] mx-auto max-h-[95vh] overflow-y-auto sm:w-full">
-        <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
             Order Details
           </DialogTitle>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={onClose}
-            className="h-8 w-8 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -140,22 +132,12 @@ export function OrderModal({ isOpen, onClose, order }: OrderModalProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t">
+          <div className="flex justify-end pt-4 border-t">
             <Button 
               variant="outline" 
               onClick={onClose}
-              className="flex-1"
             >
               Close
-            </Button>
-            <Button 
-              className="gradient-primary text-white flex-1"
-              onClick={() => {
-                // Handle order actions like updating status
-                console.log('Order action:', order.id);
-              }}
-            >
-              Update Status
             </Button>
           </div>
         </div>

@@ -26,6 +26,8 @@ export default function Campaigns() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('view');
   const [metrics, setMetrics] = useState(dynamicData.getCurrentMetrics());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   // Update metrics every 5 seconds for dynamic display
   useEffect(() => {
@@ -60,7 +62,7 @@ export default function Campaigns() {
     // Date range filter using campaign start date
     if (dateRange?.from && dateRange?.to) {
       filtered = filtered.filter(campaign => {
-        const campaignStartDate = campaign.startDate ? new Date(campaign.startDate) : new Date(campaign.createdAt);
+        const campaignStartDate = campaign.startDate ? new Date(campaign.startDate) : (campaign.createdAt ? new Date(campaign.createdAt) : new Date());
         return isWithinInterval(campaignStartDate, {
           start: dateRange.from!,
           end: dateRange.to!
@@ -89,14 +91,22 @@ export default function Campaigns() {
     setModalOpen(true);
   };
 
-  const handleSaveCampaign = (campaignData: Campaign) => {
+  const handleSaveCampaign = (campaignData: any) => {
     let updatedCampaigns;
     
     if (modalMode === 'create') {
-      updatedCampaigns = [...campaigns, campaignData];
+      const newCampaign = {
+        ...campaignData,
+        id: Date.now().toString(),
+        startDate: campaignData.startDate || new Date(),
+        endDate: campaignData.endDate || null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      updatedCampaigns = [...campaigns, newCampaign];
     } else {
       updatedCampaigns = campaigns.map(c => 
-        c.id === campaignData.id ? campaignData : c
+        c.id === campaignData.id ? { ...c, ...campaignData, updatedAt: new Date() } : c
       );
     }
     
@@ -116,6 +126,16 @@ export default function Campaigns() {
       default: return 'destructive';
     }
   };
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredCampaigns.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedCampaigns = filteredCampaigns.slice(startIndex, startIndex + itemsPerPage);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, platformFilter, dateRange]);
 
   const calculateMetrics = () => {
     const totalBudget = filteredCampaigns.reduce((sum, c) => sum + parseFloat(c.budget), 0);
@@ -277,11 +297,12 @@ export default function Campaigns() {
                       <TableHead>CTR</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Start Date</TableHead>
+                      <TableHead>End Date</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredCampaigns.map((campaign) => (
+                    {paginatedCampaigns.map((campaign) => (
                       <TableRow key={campaign.id} className="hover:bg-muted/50">
                         <TableCell>
                           <div className="font-medium">{campaign.name}</div>
@@ -294,24 +315,19 @@ export default function Campaigns() {
                         <TableCell>{campaign.ctr}%</TableCell>
                         <TableCell>
                           <Badge variant={getStatusVariant(campaign.status)}>
-                            <span className="text-white">
+                            <span className={campaign.status === 'completed' ? "text-black" : "text-white"}>
                               {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
                             </span>
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          {campaign.startDate ? new Date(campaign.startDate).toLocaleDateString() : new Date(campaign.createdAt).toLocaleDateString()}
+                          {campaign.startDate ? new Date(campaign.startDate).toLocaleDateString() : (campaign.createdAt ? new Date(campaign.createdAt).toLocaleDateString() : 'N/A')}
+                        </TableCell>
+                        <TableCell>
+                          {campaign.endDate ? new Date(campaign.endDate).toLocaleDateString() : 'Ongoing'}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end space-x-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-8 w-8 p-0"
-                              onClick={() => handleViewCampaign(campaign)}
-                            >
-                              <Calendar className="h-3 w-3" />
-                            </Button>
                             <Button 
                               variant="ghost" 
                               size="sm" 
@@ -341,6 +357,46 @@ export default function Campaigns() {
                   <Calendar className="mx-auto h-12 w-12 text-muted-foreground" />
                   <h3 className="mt-2 text-lg font-medium">No campaigns found</h3>
                   <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between px-2 py-4">
+                  <div className="text-sm text-muted-foreground">
+                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCampaigns.length)} of {filteredCampaigns.length} campaigns
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </Button>
+                    <div className="flex items-center space-x-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          className="w-8 h-8 p-0"
+                          onClick={() => setCurrentPage(page)}
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </Button>
+                  </div>
                 </div>
               )}
             </CardContent>
