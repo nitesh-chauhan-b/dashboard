@@ -61,11 +61,22 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  
+  // Platform-compatible server configuration
+  const serverOptions: any = { port };
+  
+  // Only bind to 0.0.0.0 in production or if explicitly set
+  // This prevents ENOTSUP errors on some platforms
+  if (process.env.NODE_ENV === 'production' || process.env.BIND_ALL_INTERFACES === 'true') {
+    serverOptions.host = "0.0.0.0";
+  }
+  
+  // Only use reusePort on platforms that support it
+  if (process.platform === 'linux') {
+    serverOptions.reusePort = true;
+  }
+  
+  server.listen(serverOptions, () => {
     log(`serving on port ${port}`);
   });
 })();

@@ -80,6 +80,18 @@ PORT=5000
 
 ## 🚀 Running the Project
 
+### Quick Start
+
+For the fastest setup, use our cross-platform scripts:
+
+```bash
+# Development mode (recommended)
+npm run dev
+
+# Or use the platform-compatible starter
+node start.js
+```
+
 ### Development Mode
 
 Start the development server with hot reloading:
@@ -94,20 +106,80 @@ This command:
 - Enables hot module replacement (HMR) for instant updates
 - Serves the application at `http://localhost:5000`
 
-### Production Build
+### Production Deployment
 
-To build the project for production:
+#### Method 1: Using NPM Scripts (Cross-platform)
 
 ```bash
+# Build the project
 npm run build
+
+# Start production server
+npm start
 ```
 
-### Preview Production Build
-
-To preview the production build locally:
+#### Method 2: Using Platform-Compatible Scripts
 
 ```bash
-npm run preview
+# Build using our custom script
+node scripts/build.js
+
+# Start using our platform-compatible script
+node start.js
+```
+
+### Database Setup
+
+Set up your PostgreSQL database:
+
+```bash
+# Setup database schema
+node scripts/setup-database.js
+
+# Or manually push schema
+npm run db:push
+```
+
+### Platform Compatibility
+
+The application now supports:
+- ✅ **Windows**: Fixed `NODE_ENV` command issues with cross-env
+- ✅ **macOS**: Native compatibility  
+- ✅ **Linux**: Full support with performance optimizations
+- ✅ **Docker**: Container-ready with proper host binding
+- ✅ **Replit**: Optimized for Replit deployment
+
+### Troubleshooting
+
+#### Common Windows Issues
+
+If you see `'NODE_ENV' is not recognized`:
+```bash
+# Use cross-platform scripts instead
+node start.js
+```
+
+#### Network Binding Issues
+
+If you encounter `ENOTSUP: operation not supported on socket`:
+```bash
+# Set environment variable for compatibility
+set BIND_ALL_INTERFACES=true
+npm start
+
+# Or use our platform-compatible script
+node start.js
+```
+
+#### Database Connection Issues
+
+```bash
+# Test database connection
+node scripts/setup-database.js
+
+# Check if DATABASE_URL is set correctly
+echo $DATABASE_URL  # Unix/Mac
+echo %DATABASE_URL% # Windows
 ```
 
 ## 📁 Project Structure
