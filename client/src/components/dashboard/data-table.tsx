@@ -14,7 +14,11 @@ import { useToast } from "@/hooks/use-toast";
 type SortField = keyof Campaign | null;
 type SortDirection = "asc" | "desc";
 
-export function DataTable() {
+interface DataTableProps {
+  dateFilter?: string;
+}
+
+export function DataTable({ dateFilter }: DataTableProps) {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");

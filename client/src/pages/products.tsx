@@ -7,12 +7,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Package, Star, TrendingUp, Edit2, Trash2, Plus } from "lucide-react";
 import { Product, saveProducts, loadProducts, initializeStorage } from "@/lib/local-storage";
+import { ProductModal } from "@/components/modals/product-modal";
 import { Sidebar } from "@/components/dashboard/sidebar";
 
 export function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('view');
 
   // Initialize and load data
   useEffect(() => {
@@ -20,6 +24,45 @@ export function Products() {
     const loadedProducts = loadProducts();
     setProducts(loadedProducts);
   }, []);
+
+  const handleCreateProduct = () => {
+    setSelectedProduct(null);
+    setModalMode('create');
+    setModalOpen(true);
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setModalMode('edit');
+    setModalOpen(true);
+  };
+
+  const handleViewProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setModalMode('view');
+    setModalOpen(true);
+  };
+
+  const handleSaveProduct = (productData: Product) => {
+    let updatedProducts;
+    
+    if (modalMode === 'create') {
+      updatedProducts = [...products, productData];
+    } else {
+      updatedProducts = products.map(p => 
+        p.id === productData.id ? productData : p
+      );
+    }
+    
+    setProducts(updatedProducts);
+    saveProducts(updatedProducts);
+  };
+
+  const handleDeleteProduct = (productId: string) => {
+    const updatedProducts = products.filter(p => p.id !== productId);
+    setProducts(updatedProducts);
+    saveProducts(updatedProducts);
+  };
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = 
@@ -168,7 +211,10 @@ export function Products() {
                   <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
-              <Button className="gradient-primary text-white">
+              <Button 
+                onClick={handleCreateProduct}
+                className="gradient-primary text-white"
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Product
               </Button>
@@ -225,13 +271,27 @@ export function Products() {
                     <TableCell className="font-medium">{product.sales}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-2">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 w-8 p-0"
+                          onClick={() => handleViewProduct(product)}
+                        >
+                          <Package className="h-3 w-3" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 w-8 p-0"
+                          onClick={() => handleEditProduct(product)}
+                        >
                           <Edit2 className="h-3 w-3" />
                         </Button>
                         <Button 
                           variant="ghost" 
                           size="sm" 
                           className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteProduct(product.id)}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -252,6 +312,16 @@ export function Products() {
           )}
         </CardContent>
       </Card>
+      
+      {/* Product Modal */}
+      <ProductModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        product={selectedProduct}
+        mode={modalMode}
+        onSave={handleSaveProduct}
+        onDelete={handleDeleteProduct}
+      />
         </div>
       </div>
     </div>

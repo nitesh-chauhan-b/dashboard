@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Campaign, type InsertCampaign, type Metrics, type InsertMetrics } from "@shared/schema";
+import { type User, type InsertUser, type Campaign, type InsertCampaign, type Metrics, type InsertMetrics, type Product, type InsertProduct, type Order, type InsertOrder } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -12,6 +12,18 @@ export interface IStorage {
   updateCampaign(id: string, updates: Partial<InsertCampaign>): Promise<Campaign | undefined>;
   deleteCampaign(id: string): Promise<boolean>;
   
+  getProducts(): Promise<Product[]>;
+  getProduct(id: string): Promise<Product | undefined>;
+  createProduct(product: InsertProduct): Promise<Product>;
+  updateProduct(id: string, updates: Partial<InsertProduct>): Promise<Product | undefined>;
+  deleteProduct(id: string): Promise<boolean>;
+  
+  getOrders(): Promise<Order[]>;
+  getOrder(id: string): Promise<Order | undefined>;
+  createOrder(order: InsertOrder): Promise<Order>;
+  updateOrder(id: string, updates: Partial<InsertOrder>): Promise<Order | undefined>;
+  deleteOrder(id: string): Promise<boolean>;
+  
   getMetrics(): Promise<Metrics>;
   updateMetrics(metrics: InsertMetrics): Promise<Metrics>;
 }
@@ -19,6 +31,8 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private campaigns: Map<string, Campaign>;
+  private products: Map<string, Product>;
+  private orders: Map<string, Order>;
   private metrics: Metrics = {
     id: randomUUID(),
     totalRevenue: "32499.93",
@@ -31,6 +45,8 @@ export class MemStorage implements IStorage {
   constructor() {
     this.users = new Map();
     this.campaigns = new Map();
+    this.products = new Map();
+    this.orders = new Map();
     
     // Initialize with mock data
     this.initializeMockData();
@@ -93,6 +109,108 @@ export class MemStorage implements IStorage {
         updatedAt: new Date(),
       };
       this.campaigns.set(id, fullCampaign);
+    });
+
+    // Initialize products
+    const mockProducts: InsertProduct[] = [
+      {
+        name: "Premium Wireless Headphones",
+        category: "Electronics",
+        price: "199.99",
+        stock: 45,
+        sku: "PWH-001",
+        description: "High-quality wireless headphones with noise cancellation",
+        status: "active",
+        rating: "4.5",
+        sales: 234,
+        image: "🎧"
+      },
+      {
+        name: "Smart Fitness Watch",
+        category: "Electronics",
+        price: "299.99",
+        stock: 8,
+        sku: "SFW-002",
+        description: "Advanced fitness tracking with heart rate monitoring",
+        status: "low_stock",
+        rating: "4.7",
+        sales: 156,
+        image: "⌚"
+      },
+      {
+        name: "Organic Cotton T-Shirt",
+        category: "Clothing",
+        price: "29.99",
+        stock: 120,
+        sku: "OCT-003",
+        description: "100% organic cotton, eco-friendly t-shirt",
+        status: "active",
+        rating: "4.2",
+        sales: 789,
+        image: "👕"
+      }
+    ];
+
+    mockProducts.forEach(product => {
+      const id = randomUUID();
+      const fullProduct: Product = {
+        id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+        stock: product.stock || 0,
+        sku: product.sku,
+        description: product.description || null,
+        status: product.status || 'active',
+        rating: product.rating || null,
+        sales: product.sales || 0,
+        image: product.image || null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.products.set(id, fullProduct);
+    });
+
+    // Initialize orders
+    const mockOrders: InsertOrder[] = [
+      {
+        customer: "John Smith",
+        email: "john@example.com",
+        product: "Premium Wireless Headphones",
+        amount: "199.99",
+        status: "completed",
+        tracking: "TRK001234567"
+      },
+      {
+        customer: "Sarah Johnson",
+        email: "sarah@example.com",
+        product: "Smart Fitness Watch",
+        amount: "299.99",
+        status: "shipped",
+        tracking: "TRK001234568"
+      },
+      {
+        customer: "Mike Brown",
+        email: "mike@example.com",
+        product: "Organic Cotton T-Shirt",
+        amount: "29.99",
+        status: "processing"
+      }
+    ];
+
+    mockOrders.forEach(order => {
+      const id = randomUUID();
+      const fullOrder: Order = {
+        id,
+        customer: order.customer,
+        email: order.email,
+        product: order.product,
+        amount: order.amount,
+        status: order.status || 'pending',
+        tracking: order.tracking || null,
+        date: new Date(),
+      };
+      this.orders.set(id, fullOrder);
     });
   }
 
@@ -170,6 +288,94 @@ export class MemStorage implements IStorage {
       date: new Date(),
     };
     return this.metrics;
+  }
+
+  // Product methods
+  async getProducts(): Promise<Product[]> {
+    return Array.from(this.products.values());
+  }
+
+  async getProduct(id: string): Promise<Product | undefined> {
+    return this.products.get(id);
+  }
+
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const id = randomUUID();
+    const product: Product = {
+      id,
+      name: insertProduct.name,
+      category: insertProduct.category,
+      price: insertProduct.price,
+      stock: insertProduct.stock || 0,
+      sku: insertProduct.sku,
+      description: insertProduct.description || null,
+      status: insertProduct.status || 'active',
+      rating: insertProduct.rating || null,
+      sales: insertProduct.sales || 0,
+      image: insertProduct.image || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.products.set(id, product);
+    return product;
+  }
+
+  async updateProduct(id: string, updates: Partial<InsertProduct>): Promise<Product | undefined> {
+    const product = this.products.get(id);
+    if (!product) return undefined;
+
+    const updatedProduct: Product = {
+      ...product,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.products.set(id, updatedProduct);
+    return updatedProduct;
+  }
+
+  async deleteProduct(id: string): Promise<boolean> {
+    return this.products.delete(id);
+  }
+
+  // Order methods
+  async getOrders(): Promise<Order[]> {
+    return Array.from(this.orders.values());
+  }
+
+  async getOrder(id: string): Promise<Order | undefined> {
+    return this.orders.get(id);
+  }
+
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const id = randomUUID();
+    const order: Order = {
+      id,
+      customer: insertOrder.customer,
+      email: insertOrder.email,
+      product: insertOrder.product,
+      amount: insertOrder.amount,
+      status: insertOrder.status || 'pending',
+      tracking: insertOrder.tracking || null,
+      date: new Date(),
+    };
+    this.orders.set(id, order);
+    return order;
+  }
+
+  async updateOrder(id: string, updates: Partial<InsertOrder>): Promise<Order | undefined> {
+    const order = this.orders.get(id);
+    if (!order) return undefined;
+
+    const updatedOrder: Order = {
+      ...order,
+      ...updates,
+    };
+    this.orders.set(id, updatedOrder);
+    return updatedOrder;
+  }
+
+  async deleteOrder(id: string): Promise<boolean> {
+    return this.orders.delete(id);
   }
 }
 
