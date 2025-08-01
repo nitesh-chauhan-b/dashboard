@@ -1,21 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useTheme } from "@/components/ui/theme-provider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { FileText, FileSpreadsheet, Moon, Sun } from "lucide-react";
+import { FileText, FileSpreadsheet } from "lucide-react";
 
 interface HeaderProps {
   onExportPDF: () => void;
   onExportCSV: () => void;
-  onDateRangeChange: (value: string) => void;
 }
 
-export function Header({ onExportPDF, onExportCSV, onDateRangeChange }: HeaderProps) {
-  const { theme, setTheme } = useTheme();
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
+export function Header({ onExportPDF, onExportCSV }: HeaderProps) {
 
   return (
     <header className="bg-card border-b border-border p-4 lg:p-6 shadow-sm">
@@ -28,19 +20,6 @@ export function Header({ onExportPDF, onExportCSV, onDateRangeChange }: HeaderPr
         </div>
         
         <div className="flex flex-wrap items-center gap-2 lg:space-x-4">
-          {/* Date Range Filter */}
-          <Select defaultValue="30" onValueChange={onDateRangeChange}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Select range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="7">Last 7 days</SelectItem>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
-              <SelectItem value="365">Last year</SelectItem>
-            </SelectContent>
-          </Select>
-          
           {/* Export Buttons */}
           <Button onClick={onExportPDF} className="gradient-primary text-white shadow-md">
             <FileText className="mr-2 h-4 w-4" />
@@ -50,15 +29,6 @@ export function Header({ onExportPDF, onExportCSV, onDateRangeChange }: HeaderPr
           <Button variant="outline" onClick={onExportCSV}>
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export CSV
-          </Button>
-          
-          {/* Theme Toggle */}
-          <Button variant="outline" size="icon" onClick={toggleTheme}>
-            {theme === "light" ? (
-              <Moon className="h-4 w-4" />
-            ) : (
-              <Sun className="h-4 w-4" />
-            )}
           </Button>
           
           {/* User Avatar */}

@@ -69,13 +69,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleDateRangeChange = (value: string) => {
-    // This would normally trigger a data refetch with the new date range
-    toast({
-      title: "Date Range Updated",
-      description: `Showing data for the last ${value} days.`,
-    });
-  };
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,7 +79,6 @@ export default function Dashboard() {
         <Header
           onExportPDF={handleExportPDF}
           onExportCSV={handleExportCSV}
-          onDateRangeChange={handleDateRangeChange}
         />
         
         <main className="p-4 lg:p-6">

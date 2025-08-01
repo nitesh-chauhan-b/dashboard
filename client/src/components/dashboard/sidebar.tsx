@@ -106,28 +106,26 @@ function SidebarContent() {
 }
 
 export function Sidebar() {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 shadow-lg z-50">
+      <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 z-50">
         <SidebarContent />
       </div>
       
-      {/* Mobile Navigation */}
+      {/* Mobile Sidebar - Only visible when needed */}
       <div className="lg:hidden">
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet>
           <SheetTrigger asChild>
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
-              className="fixed top-4 left-4 z-50 lg:hidden bg-white dark:bg-gray-800 shadow-lg border"
+              className="fixed top-6 left-6 z-50 bg-white dark:bg-gray-900 shadow-lg border-gray-200 dark:border-gray-700"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-4 w-4 text-gray-700 dark:text-gray-300" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0 bg-white dark:bg-gray-900">
+          <SheetContent side="left" className="p-0 w-64">
             <SidebarContent />
           </SheetContent>
         </Sheet>

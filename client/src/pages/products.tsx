@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Package, Star, TrendingUp, Edit2, Trash2, Plus } from "lucide-react";
 import { Product, saveProducts, loadProducts, initializeStorage } from "@/lib/local-storage";
+import { Sidebar } from "@/components/dashboard/sidebar";
 
 export function Products() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -67,14 +68,18 @@ export function Products() {
   const totalSales = products.reduce((sum, product) => sum + product.sales, 0);
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Products</h1>
-        <p className="text-muted-foreground">
-          Manage your product catalog and inventory
-        </p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Sidebar />
+      
+      <div className="lg:ml-64 min-h-screen">
+        <div className="space-y-6 p-6">
+          {/* Header */}
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Products</h1>
+            <p className="text-muted-foreground">
+              Manage your product catalog and inventory
+            </p>
+          </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -247,6 +252,8 @@ export function Products() {
           )}
         </CardContent>
       </Card>
+        </div>
+      </div>
     </div>
   );
 }
