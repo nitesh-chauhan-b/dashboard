@@ -16,6 +16,8 @@ This is an analytics dashboard application called "ADmyBRAND Insights" that prov
 - ✅ **Performance Section**: Removed Export Report button per user request
 - ✅ **Campaign Status**: Fixed completed campaign status visibility in dark mode
 - ✅ **Product Table**: Improved mobile responsiveness and removed redundant action icons
+- ✅ **Vercel Deployment**: Added complete Vercel deployment configuration with serverless API functions
+- ✅ **Production Ready**: Configured build process and environment for GitHub to Vercel deployment
 
 # User Preferences
 
@@ -105,4 +107,28 @@ All schemas are defined with Drizzle ORM and include Zod validation for type saf
 - **date-fns**: Date manipulation library
 - **nanoid**: Unique ID generation
 
-The application is designed to be deployed on platforms that support Node.js applications with PostgreSQL databases, with specific optimizations for Replit's development environment.
+The application is designed to be deployed on platforms that support Node.js applications with PostgreSQL databases, with specific optimizations for Replit's development environment and Vercel's serverless platform.
+
+## Deployment Configuration
+
+### Vercel Deployment
+The project includes complete Vercel deployment configuration:
+
+- **API Functions**: Serverless functions in `/api` directory for campaigns, products, orders, and metrics
+- **Build Configuration**: `vercel.json` with proper routing and function settings
+- **CORS Support**: Cross-origin resource sharing configured for all API endpoints
+- **Static Assets**: Optimized Vite build for production deployment
+- **Environment Variables**: Support for both development and production configurations
+
+### Deployment Structure
+```
+├── api/                    # Vercel serverless functions
+│   ├── metrics.ts         # GET /api/metrics
+│   ├── campaigns.ts       # GET/POST /api/campaigns  
+│   ├── products.ts        # GET/POST /api/products
+│   ├── orders.ts          # GET/POST /api/orders
+│   └── campaigns/[id].ts  # GET/PUT/DELETE /api/campaigns/[id]
+├── vercel.json            # Vercel configuration
+├── vite.config.production.ts # Production build config
+└── README.vercel.md       # Deployment guide
+```
