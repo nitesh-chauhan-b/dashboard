@@ -107,6 +107,7 @@ export function ChartsSection() {
                     stroke="#0ea5e9"
                     strokeWidth={3}
                     dot={{ fill: "#0ea5e9", strokeWidth: 2, r: 4 }}
+                    name="Total Revenue"
                   />
                   <Line 
                     type="monotone" 
@@ -114,15 +115,8 @@ export function ChartsSection() {
                     stroke="#f97316"
                     strokeWidth={3}
                     dot={{ fill: "#f97316", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2 }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="target" 
-                    stroke="#10b981"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    dot={{ fill: "#10b981", strokeWidth: 2, r: 3 }}
+                    activeDot={{ r: 6, stroke: "#f97316", strokeWidth: 2 }}
+                    name="Total Target"
                   />
                 </LineChart>
               </ResponsiveContainer>

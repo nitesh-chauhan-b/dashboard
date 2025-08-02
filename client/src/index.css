@@ -103,3 +103,27 @@
     transform: translateY(0);
   }
 }
+
+/* Force white text for all chart elements in dark mode */
+.dark .recharts-cartesian-axis-tick-value,
+.dark .recharts-polar-angle-axis-tick-value,
+.dark .recharts-polar-radius-axis-tick-value,
+.dark .recharts-text,
+.dark .recharts-cartesian-axis-tick-value text,
+.dark .recharts-polar-angle-axis-tick-value text,
+.dark .recharts-label text {
+  fill: hsl(var(--foreground)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .recharts-cartesian-axis-line,
+.dark .recharts-cartesian-axis-tick-line,
+.dark .recharts-polar-angle-axis-line,
+.dark .recharts-polar-radius-axis-line {
+  stroke: hsl(var(--foreground)) !important;
+}
+
+/* Override any default recharts dark styling */
+.dark .recharts-wrapper {
+  color: hsl(var(--foreground)) !important;
+}
