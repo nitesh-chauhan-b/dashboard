@@ -1,16 +1,13 @@
-# ADmyBRAND Insights - Analytics Dashboard
+# Dashboard
 
-A modern, responsive analytics dashboard built with React, TypeScript, and Tailwind CSS. This application provides comprehensive insights into advertising campaigns, performance metrics, and data visualization for marketing teams.
-
-![ADmyBRAND Insights Dashboard](https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop&crop=center)
+A modern, responsive analytics dashboard built with React, TypeScript, and Tailwind CSS. This application provides comprehensive insights into advertising campaigns, performance metrics, and data visualization.
 
 ## 🚀 Live Demo
 
-**Deployed on Vercel:** [https://admybrand-insights.vercel.app](https://admybrand-insights.vercel.app)
+**Deployed on Vercel:** [https://dashboard-rouge-beta-qw10397zlx.vercel.app/](https://dashboard-rouge-beta-qw10397zlx.vercel.app/)
 
 ## ✨ Features
 
-### 📊 Dashboard Overview
 - **Real-time Metrics**: Revenue tracking, user analytics, and conversion metrics
 - **Interactive Charts**: Line charts, pie charts, radar charts with hover effects
 - **Campaign Management**: Complete CRUD operations for advertising campaigns
@@ -70,10 +67,11 @@ A modern, responsive analytics dashboard built with React, TypeScript, and Tailw
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone and enter the repository**
+
    ```bash
-   git clone https://github.com/yourusername/admybrand-insights.git
-   cd admybrand-insights
+   git clone https://github.com/nitesh-chauhan-b/dashboard.git
+   cd dashboard
    ```
 
 2. **Install dependencies**
@@ -87,32 +85,15 @@ A modern, responsive analytics dashboard built with React, TypeScript, and Tailw
    ```
    Update the `.env` file with your configuration values.
 
-4. **Start development server**
+4. **To Start Project**
    ```bash
-   npm run dev
+   npm start
    ```
 
 5. **Open your browser**
    Navigate to `http://localhost:5000`
 
-### Development Commands
-
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Run type checking
-npm run type-check
-
-# Lint code
-npm run lint
-```
+##
 
 ## 📁 Project Structure
 
@@ -196,38 +177,6 @@ DATABASE_URL=your_postgresql_connection_string
 VITE_ANALYTICS_ID=your_analytics_id
 ```
 
-### Customization
-
-#### Theme Customization
-Modify `client/src/index.css` to customize the color scheme:
-
-```css
-:root {
-  --primary: hsl(158, 64%, 52%);
-  --secondary: hsl(270, 95%, 75%);
-  /* Add your custom colors */
-}
-```
-
-#### Component Styling
-All components use Tailwind CSS classes and can be easily customized by modifying the className props.
-
-## 🧪 Testing
-
-The application includes comprehensive testing for:
-- Component functionality
-- API endpoints
-- Data validation
-- User interactions
-
-```bash
-# Run tests
-npm run test
-
-# Run tests with coverage
-npm run test:coverage
-```
-
 ## 📊 Performance
 
 ### Lighthouse Scores
@@ -266,20 +215,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Recharts** for beautiful and responsive charts
 - **Tailwind CSS** for the utility-first CSS framework
 - **React Query** for powerful data fetching and caching
-
-## 📞 Support
-
-For support, email support@admybrand.com or join our Slack channel.
-
-## 🗺 Roadmap
-
-- [ ] Real-time notifications
-- [ ] Advanced filtering and search
-- [ ] Multi-language support
-- [ ] Advanced analytics dashboard
-- [ ] API rate limiting
-- [ ] User authentication and roles
-
----
-
-Built with ❤️ by the ADmyBRAND team
