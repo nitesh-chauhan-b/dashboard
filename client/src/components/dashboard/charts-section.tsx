@@ -219,7 +219,25 @@ export function ChartsSection() {
                     dataKey="percentage"
                   >
                     {mockPlatformData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.color}
+                        style={{ 
+                          filter: "drop-shadow(0 0 4px rgba(0,0,0,0.1))",
+                          transition: "all 0.3s ease",
+                          transformOrigin: "center"
+                        }}
+                        onMouseEnter={(e) => {
+                          const target = e.target as SVGElement;
+                          target.style.transform = "scale(1.05)";
+                          target.style.filter = "drop-shadow(0 0 8px rgba(0,0,0,0.3)) brightness(1.1)";
+                        }}
+                        onMouseLeave={(e) => {
+                          const target = e.target as SVGElement;
+                          target.style.transform = "scale(1)";
+                          target.style.filter = "drop-shadow(0 0 4px rgba(0,0,0,0.1))";
+                        }}
+                      />
                     ))}
                   </Pie>
                   <Tooltip 
@@ -277,7 +295,25 @@ export function ChartsSection() {
                       dataKey="users"
                     >
                       {mockUserData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                          style={{ 
+                            filter: "drop-shadow(0 0 4px rgba(0,0,0,0.1))",
+                            transition: "all 0.3s ease",
+                            transformOrigin: "center"
+                          }}
+                          onMouseEnter={(e) => {
+                            const target = e.target as SVGElement;
+                            target.style.transform = "scale(1.05)";
+                            target.style.filter = "drop-shadow(0 0 8px rgba(0,0,0,0.3)) brightness(1.1)";
+                          }}
+                          onMouseLeave={(e) => {
+                            const target = e.target as SVGElement;
+                            target.style.transform = "scale(1)";
+                            target.style.filter = "drop-shadow(0 0 4px rgba(0,0,0,0.1))";
+                          }}
+                        />
                       ))}
                     </Pie>
                     <Tooltip 
@@ -303,7 +339,13 @@ export function ChartsSection() {
             <div className="grid grid-cols-2 gap-4 text-sm">
               {mockUserData.map((user) => (
                 <div key={user.plan} className="text-center">
-                  <div className="text-muted-foreground">{user.plan} Plan</div>
+                  <div className="flex items-center justify-center mb-1">
+                    <div 
+                      className="w-3 h-3 rounded-full mr-2" 
+                      style={{ backgroundColor: user.color }}
+                    ></div>
+                    <span className="text-muted-foreground">{user.plan} Plan</span>
+                  </div>
                   <div className="font-semibold text-foreground">{user.users.toLocaleString()}</div>
                 </div>
               ))}

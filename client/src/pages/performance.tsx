@@ -161,7 +161,25 @@ export default function Performance() {
                         dataKey="value"
                       >
                         {channelData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={entry.color}
+                            style={{ 
+                              filter: "drop-shadow(0 0 4px rgba(0,0,0,0.1))",
+                              transition: "all 0.3s ease",
+                              transformOrigin: "center"
+                            }}
+                            onMouseEnter={(e) => {
+                              const target = e.target as SVGElement;
+                              target.style.transform = "scale(1.05)";
+                              target.style.filter = "drop-shadow(0 0 8px rgba(0,0,0,0.3)) brightness(1.1)";
+                            }}
+                            onMouseLeave={(e) => {
+                              const target = e.target as SVGElement;
+                              target.style.transform = "scale(1)";
+                              target.style.filter = "drop-shadow(0 0 4px rgba(0,0,0,0.1))";
+                            }}
+                          />
                         ))}
                       </Pie>
                       <Tooltip 
