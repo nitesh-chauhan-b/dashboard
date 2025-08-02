@@ -232,51 +232,53 @@ export default function Campaigns() {
           {/* Campaigns Table */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between">
                 <div>
                   <CardTitle>Campaign Performance</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     Track and manage your advertising campaigns with advanced filtering
                   </p>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                     <Input
                       placeholder="Search campaigns..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 w-64"
+                      className="pl-10 w-full sm:w-64"
                     />
                   </div>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Status</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="paused">Paused</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={platformFilter} onValueChange={setPlatformFilter}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="Platform" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Platforms</SelectItem>
-                      <SelectItem value="Google Ads">Google Ads</SelectItem>
-                      <SelectItem value="Facebook">Facebook</SelectItem>
-                      <SelectItem value="Instagram">Instagram</SelectItem>
-                      <SelectItem value="Twitter">Twitter</SelectItem>
-                      <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                      <SelectItem value="TikTok">TikTok</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex space-x-3">
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger className="w-full sm:w-32">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Status</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="paused">Paused</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select value={platformFilter} onValueChange={setPlatformFilter}>
+                      <SelectTrigger className="w-full sm:w-32">
+                        <SelectValue placeholder="Platform" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Platforms</SelectItem>
+                        <SelectItem value="Google Ads">Google Ads</SelectItem>
+                        <SelectItem value="Facebook">Facebook</SelectItem>
+                        <SelectItem value="Instagram">Instagram</SelectItem>
+                        <SelectItem value="Twitter">Twitter</SelectItem>
+                        <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                        <SelectItem value="TikTok">TikTok</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Button 
                     onClick={handleCreateCampaign}
-                    className="gradient-primary text-white"
+                    className="gradient-primary text-white w-full sm:w-auto"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Campaign
@@ -289,15 +291,15 @@ export default function Campaigns() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Campaign</TableHead>
-                      <TableHead>Platform</TableHead>
-                      <TableHead>Budget</TableHead>
-                      <TableHead>Spent</TableHead>
-                      <TableHead>Conversions</TableHead>
-                      <TableHead>CTR</TableHead>
+                      <TableHead className="w-[200px]">Campaign</TableHead>
+                      <TableHead className="hidden sm:table-cell">Platform</TableHead>
+                      <TableHead className="hidden lg:table-cell">Budget</TableHead>
+                      <TableHead className="hidden lg:table-cell">Spent</TableHead>
+                      <TableHead className="hidden xl:table-cell">Conversions</TableHead>
+                      <TableHead className="hidden xl:table-cell">CTR</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Start Date</TableHead>
-                      <TableHead>End Date</TableHead>
+                      <TableHead className="hidden md:table-cell">Start Date</TableHead>
+                      <TableHead className="hidden md:table-cell">End Date</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -362,39 +364,86 @@ export default function Campaigns() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-2 py-4">
-                  <div className="text-sm text-muted-foreground">
+                <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 items-center justify-between px-2 py-4">
+                  <div className="text-sm text-muted-foreground order-2 sm:order-1">
                     Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCampaigns.length)} of {filteredCampaigns.length} campaigns
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 order-1 sm:order-2 w-full sm:w-auto justify-center">
                     <Button 
                       variant="outline" 
                       size="sm" 
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
+                      className="hidden sm:flex"
                     >
                       Previous
                     </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="sm:hidden w-8 h-8 p-0"
+                    >
+                      &lt;
+                    </Button>
                     <div className="flex items-center space-x-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <Button
-                          key={page}
-                          variant={currentPage === page ? "default" : "outline"}
-                          size="sm"
-                          className="w-8 h-8 p-0"
-                          onClick={() => setCurrentPage(page)}
-                        >
-                          {page}
-                        </Button>
-                      ))}
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                        // On mobile, show only current page and immediate neighbors
+                        const showOnMobile = Math.abs(currentPage - page) <= 1 || page === 1 || page === totalPages;
+                        // On tablet, show more pages
+                        const showOnTablet = Math.abs(currentPage - page) <= 2 || page === 1 || page === totalPages;
+                        
+                        if (!showOnMobile && window.innerWidth < 640) return null;
+                        if (!showOnTablet && window.innerWidth < 1024) return null;
+
+                        if (!showOnMobile && page !== 1 && page !== totalPages) {
+                          if (page === currentPage - 2 || page === currentPage + 2) {
+                            return (
+                              <Button
+                                key={`ellipsis-${page}`}
+                                variant="outline"
+                                size="sm"
+                                className="w-8 h-8 p-0 hidden sm:flex"
+                                disabled
+                              >
+                                ...
+                              </Button>
+                            );
+                          }
+                          return null;
+                        }
+
+                        return (
+                          <Button
+                            key={page}
+                            variant={currentPage === page ? "default" : "outline"}
+                            size="sm"
+                            className="w-8 h-8 p-0"
+                            onClick={() => setCurrentPage(page)}
+                          >
+                            {page}
+                          </Button>
+                        );
+                      })}
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
+                      className="hidden sm:flex"
                     >
                       Next
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="sm:hidden w-8 h-8 p-0"
+                    >
+                      &gt;
                     </Button>
                   </div>
                 </div>

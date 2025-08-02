@@ -134,25 +134,25 @@ export function Orders() {
           {/* Orders Table */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between">
                 <div>
                   <CardTitle>Recent Orders</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     Complete order history and tracking information
                   </p>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                     <Input
                       placeholder="Search orders..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 w-64"
+                      className="pl-10 w-full sm:w-64"
                     />
                   </div>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-full sm:w-40">
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -171,14 +171,14 @@ export function Orders() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Amount</TableHead>
+                      <TableHead className="w-[100px]">Order ID</TableHead>
+                      <TableHead className="w-[200px]">Customer</TableHead>
+                      <TableHead className="hidden md:table-cell">Product</TableHead>
+                      <TableHead className="hidden sm:table-cell">Amount</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Tracking</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead className="hidden lg:table-cell">Date</TableHead>
+                      <TableHead className="hidden xl:table-cell">Tracking</TableHead>
+                      <TableHead className="text-right w-[100px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
