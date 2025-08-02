@@ -116,14 +116,16 @@ export default function Performance() {
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis 
                         dataKey="month" 
-                        stroke="currentColor"
-                        tick={{ fill: "currentColor", fontSize: 12 }}
-                        style={{ fill: "hsl(var(--foreground))" }}
+                        stroke="hsl(var(--foreground))"
+                        tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                        axisLine={{ stroke: "hsl(var(--foreground))" }}
+                        tickLine={{ stroke: "hsl(var(--foreground))" }}
                       />
                       <YAxis 
-                        stroke="currentColor"
-                        tick={{ fill: "currentColor", fontSize: 12 }}
-                        style={{ fill: "hsl(var(--foreground))" }}
+                        stroke="hsl(var(--foreground))"
+                        tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                        axisLine={{ stroke: "hsl(var(--foreground))" }}
+                        tickLine={{ stroke: "hsl(var(--foreground))" }}
                       />
                       <Tooltip 
                         contentStyle={{
@@ -205,14 +207,16 @@ export default function Performance() {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis 
                       dataKey="month" 
-                      stroke="currentColor"
-                      tick={{ fill: "currentColor", fontSize: 12 }}
-                      style={{ fill: "hsl(var(--foreground))" }}
+                      stroke="hsl(var(--foreground))"
+                      tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                      axisLine={{ stroke: "hsl(var(--foreground))" }}
+                      tickLine={{ stroke: "hsl(var(--foreground))" }}
                     />
                     <YAxis 
-                      stroke="currentColor"
-                      tick={{ fill: "currentColor", fontSize: 12 }}
-                      style={{ fill: "hsl(var(--foreground))" }}
+                      stroke="hsl(var(--foreground))"
+                      tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                      axisLine={{ stroke: "hsl(var(--foreground))" }}
+                      tickLine={{ stroke: "hsl(var(--foreground))" }}
                     />
                     <Tooltip 
                       contentStyle={{

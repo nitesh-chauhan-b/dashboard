@@ -79,15 +79,17 @@ export function ChartsSection() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis 
                     dataKey="month" 
-                    stroke="currentColor"
-                    tick={{ fill: "currentColor", fontSize: 12 }}
-                    style={{ fill: "hsl(var(--foreground))" }}
+                    stroke="hsl(var(--foreground))"
+                    tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                    axisLine={{ stroke: "hsl(var(--foreground))" }}
+                    tickLine={{ stroke: "hsl(var(--foreground))" }}
                   />
                   <YAxis 
-                    stroke="currentColor"
+                    stroke="hsl(var(--foreground))"
                     tickFormatter={(value) => `$${(value / 1000)}K`}
-                    tick={{ fill: "currentColor", fontSize: 12 }}
-                    style={{ fill: "hsl(var(--foreground))" }}
+                    tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
+                    axisLine={{ stroke: "hsl(var(--foreground))" }}
+                    tickLine={{ stroke: "hsl(var(--foreground))" }}
                   />
                   <Tooltip 
                     contentStyle={{
