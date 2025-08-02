@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { FileText, FileSpreadsheet } from "lucide-react";
 
 interface HeaderProps {
@@ -30,13 +29,6 @@ export function Header({ onExportPDF, onExportCSV }: HeaderProps) {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          
-          {/* User Avatar */}
-          <Avatar>
-            <AvatarFallback className="gradient-primary text-white font-medium">
-              AD
-            </AvatarFallback>
-          </Avatar>
         </div>
       </div>
     </header>

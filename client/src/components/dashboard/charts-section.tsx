@@ -283,15 +283,16 @@ export function ChartsSection() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-center mb-6">
-              <div className="relative w-32 h-32">
+              <div className="relative w-40 h-40">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={mockUserData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={65}
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={2}
                       dataKey="users"
                     >
                       {mockUserData.map((entry, index) => (
@@ -301,7 +302,8 @@ export function ChartsSection() {
                           style={{ 
                             filter: "drop-shadow(0 0 4px rgba(0,0,0,0.1))",
                             transition: "all 0.3s ease",
-                            transformOrigin: "center"
+                            transformOrigin: "center",
+                            cursor: "pointer"
                           }}
                           onMouseEnter={(e) => {
                             const target = e.target as SVGElement;
@@ -328,7 +330,7 @@ export function ChartsSection() {
                     />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-foreground">2,324</div>
                     <div className="text-xs text-muted-foreground">Total Users</div>
