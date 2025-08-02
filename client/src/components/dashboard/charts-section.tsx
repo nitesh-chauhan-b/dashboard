@@ -79,17 +79,15 @@ export function ChartsSection() {
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis 
                     dataKey="month" 
-                    stroke="hsl(var(--foreground))"
-                    tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                    axisLine={{ stroke: "hsl(var(--foreground))" }}
-                    tickLine={{ stroke: "hsl(var(--foreground))" }}
+                    tick={{ fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <YAxis 
-                    stroke="hsl(var(--foreground))"
                     tickFormatter={(value) => `$${(value / 1000)}K`}
-                    tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                    axisLine={{ stroke: "hsl(var(--foreground))" }}
-                    tickLine={{ stroke: "hsl(var(--foreground))" }}
+                    tick={{ fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
                   />
                   <Tooltip 
                     contentStyle={{
@@ -172,12 +170,10 @@ export function ChartsSection() {
                   <PolarGrid stroke="hsl(var(--border))" />
                   <PolarAngleAxis 
                     dataKey="region" 
-                    tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }}
-                    stroke="hsl(var(--foreground))"
+                    tick={{ fontSize: 12 }}
                   />
                   <PolarRadiusAxis 
-                    tick={{ fontSize: 10, fill: "hsl(var(--foreground))" }}
-                    stroke="hsl(var(--foreground))"
+                    tick={{ fontSize: 10 }}
                   />
                   <Radar
                     name="Sales"

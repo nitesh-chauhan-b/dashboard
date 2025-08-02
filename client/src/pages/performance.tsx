@@ -116,16 +116,14 @@ export default function Performance() {
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis 
                         dataKey="month" 
-                        stroke="hsl(var(--foreground))"
-                        tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                        axisLine={{ stroke: "hsl(var(--foreground))" }}
-                        tickLine={{ stroke: "hsl(var(--foreground))" }}
+                        tick={{ fontSize: 12 }}
+                        axisLine={false}
+                        tickLine={false}
                       />
                       <YAxis 
-                        stroke="hsl(var(--foreground))"
-                        tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                        axisLine={{ stroke: "hsl(var(--foreground))" }}
-                        tickLine={{ stroke: "hsl(var(--foreground))" }}
+                        tick={{ fontSize: 12 }}
+                        axisLine={false}
+                        tickLine={false}
                       />
                       <Tooltip 
                         contentStyle={{
@@ -207,16 +205,14 @@ export default function Performance() {
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis 
                       dataKey="month" 
-                      stroke="hsl(var(--foreground))"
-                      tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                      axisLine={{ stroke: "hsl(var(--foreground))" }}
-                      tickLine={{ stroke: "hsl(var(--foreground))" }}
+                      tick={{ fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
                     />
                     <YAxis 
-                      stroke="hsl(var(--foreground))"
-                      tick={{ fill: "hsl(var(--foreground))", fontSize: 12 }}
-                      axisLine={{ stroke: "hsl(var(--foreground))" }}
-                      tickLine={{ stroke: "hsl(var(--foreground))" }}
+                      tick={{ fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
                     />
                     <Tooltip 
                       contentStyle={{
