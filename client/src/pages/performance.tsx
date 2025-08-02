@@ -58,7 +58,16 @@ export default function Performance() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button variant="outline">Export Report</Button>
+              <Select>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Time Period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">Last 7 days</SelectItem>
+                  <SelectItem value="30d">Last 30 days</SelectItem>
+                  <SelectItem value="90d">Last 90 days</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </header>
@@ -105,9 +114,27 @@ export default function Performance() {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={performanceData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-                      <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip />
+                      <XAxis 
+                        dataKey="month" 
+                        stroke="currentColor"
+                        tick={{ fill: "currentColor", fontSize: 12 }}
+                        style={{ fill: "hsl(var(--foreground))" }}
+                      />
+                      <YAxis 
+                        stroke="currentColor"
+                        tick={{ fill: "currentColor", fontSize: 12 }}
+                        style={{ fill: "hsl(var(--foreground))" }}
+                      />
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "var(--radius)",
+                          color: "hsl(var(--foreground))"
+                        }}
+                        labelStyle={{ color: "hsl(var(--foreground))" }}
+                        itemStyle={{ color: "hsl(var(--foreground))" }}
+                      />
                       <Line type="monotone" dataKey="clicks" stroke="#3b82f6" strokeWidth={2} />
                       <Line type="monotone" dataKey="conversions" stroke="#10b981" strokeWidth={2} />
                     </LineChart>
@@ -137,7 +164,16 @@ export default function Performance() {
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip 
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "var(--radius)",
+                          color: "hsl(var(--foreground))"
+                        }}
+                        labelStyle={{ color: "hsl(var(--foreground))" }}
+                        itemStyle={{ color: "hsl(var(--foreground))" }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -167,9 +203,27 @@ export default function Performance() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={performanceData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip />
+                    <XAxis 
+                      dataKey="month" 
+                      stroke="currentColor"
+                      tick={{ fill: "currentColor", fontSize: 12 }}
+                      style={{ fill: "hsl(var(--foreground))" }}
+                    />
+                    <YAxis 
+                      stroke="currentColor"
+                      tick={{ fill: "currentColor", fontSize: 12 }}
+                      style={{ fill: "hsl(var(--foreground))" }}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "var(--radius)",
+                        color: "hsl(var(--foreground))"
+                      }}
+                      labelStyle={{ color: "hsl(var(--foreground))" }}
+                      itemStyle={{ color: "hsl(var(--foreground))" }}
+                    />
                     <Bar dataKey="cost" fill="#8b5cf6" />
                   </BarChart>
                 </ResponsiveContainer>

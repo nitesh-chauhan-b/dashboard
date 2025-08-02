@@ -222,18 +222,18 @@ export function Products() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Product</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Rating</TableHead>
-                  <TableHead>Sales</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="min-w-[200px]">Product</TableHead>
+                  <TableHead className="min-w-[120px]">Category</TableHead>
+                  <TableHead className="min-w-[80px]">Price</TableHead>
+                  <TableHead className="min-w-[80px]">Stock</TableHead>
+                  <TableHead className="min-w-[100px]">Status</TableHead>
+                  <TableHead className="min-w-[80px]">Rating</TableHead>
+                  <TableHead className="min-w-[80px]">Sales</TableHead>
+                  <TableHead className="text-right min-w-[100px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -241,10 +241,10 @@ export function Products() {
                   <TableRow key={product.id} className="hover:bg-muted/50">
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <div className="text-2xl">{product.image}</div>
-                        <div>
-                          <div className="font-medium">{product.name}</div>
-                          <div className="text-sm text-muted-foreground">{product.id}</div>
+                        <div className="text-xl sm:text-2xl flex-shrink-0">{product.image}</div>
+                        <div className="min-w-0">
+                          <div className="font-medium truncate">{product.name}</div>
+                          <div className="text-xs sm:text-sm text-muted-foreground truncate">{product.id}</div>
                         </div>
                       </div>
                     </TableCell>
@@ -257,7 +257,7 @@ export function Products() {
                     </TableCell>
                     <TableCell>
                       <Badge variant={getStatusVariant(product.status)}>
-                        <span className="text-white">
+                        <span className="text-white text-xs">
                           {product.status.replace('_', ' ').charAt(0).toUpperCase() + product.status.replace('_', ' ').slice(1)}
                         </span>
                       </Badge>
@@ -270,15 +270,7 @@ export function Products() {
                     </TableCell>
                     <TableCell className="font-medium">{product.sales}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end space-x-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-8 w-8 p-0"
-                          onClick={() => handleViewProduct(product)}
-                        >
-                          <Package className="h-3 w-3" />
-                        </Button>
+                      <div className="flex items-center justify-end space-x-1">
                         <Button 
                           variant="ghost" 
                           size="sm" 

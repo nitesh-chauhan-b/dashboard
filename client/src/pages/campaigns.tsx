@@ -315,7 +315,7 @@ export default function Campaigns() {
                         <TableCell>{campaign.ctr}%</TableCell>
                         <TableCell>
                           <Badge variant={getStatusVariant(campaign.status)}>
-                            <span className={campaign.status === 'completed' ? "text-black" : "text-white"}>
+                            <span className={campaign.status === 'completed' ? "text-foreground dark:text-foreground" : "text-white"}>
                               {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
                             </span>
                           </Badge>
