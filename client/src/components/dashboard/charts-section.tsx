@@ -282,38 +282,27 @@ export function ChartsSection() {
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-center mb-6">
-              <div className="relative w-40 h-40">
+            <div className="flex items-center justify-center mb-6 overflow-visible">
+              <div className="relative w-48 h-48 overflow-visible">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                     <Pie
                       data={mockUserData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={2}
+                      innerRadius={65}
+                      outerRadius={85}
+                      paddingAngle={3}
                       dataKey="users"
                     >
                       {mockUserData.map((entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 
                           fill={entry.color}
+                          stroke="transparent"
                           style={{ 
-                            filter: "drop-shadow(0 0 4px rgba(0,0,0,0.1))",
-                            transition: "all 0.3s ease",
-                            transformOrigin: "center",
-                            cursor: "pointer"
-                          }}
-                          onMouseEnter={(e) => {
-                            const target = e.target as SVGElement;
-                            target.style.transform = "scale(1.05)";
-                            target.style.filter = "drop-shadow(0 0 8px rgba(0,0,0,0.3)) brightness(1.1)";
-                          }}
-                          onMouseLeave={(e) => {
-                            const target = e.target as SVGElement;
-                            target.style.transform = "scale(1)";
-                            target.style.filter = "drop-shadow(0 0 4px rgba(0,0,0,0.1))";
+                            cursor: "pointer",
+                            outline: "none"
                           }}
                         />
                       ))}

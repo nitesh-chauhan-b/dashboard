@@ -126,3 +126,15 @@
 .dark .recharts-cartesian-grid-vertical line {
   stroke: rgba(255, 255, 255, 0.3) !important;
 }
+
+/* Enhanced pie chart hover effects */
+.recharts-pie-sector:hover {
+  filter: brightness(1.1) drop-shadow(0 0 8px rgba(0,0,0,0.3)) !important;
+  transform-origin: center !important;
+}
+
+.recharts-pie .recharts-sector:hover {
+  transform: scale(1.02) !important;
+  transform-origin: center !important;
+  transition: all 0.3s ease !important;
+}
